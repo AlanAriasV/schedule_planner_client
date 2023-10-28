@@ -1,0 +1,24 @@
+@use 'base';
+
+.header {
+  grid-area: header;
+  background-color: base.$color-white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.3);
+  z-index: 1;
+
+  .header-title {
+    font-size: base.$text-md3;
+    text-transform: capitalize;
+    span {
+      color: base.$color-grey;
+
+      &:last-child {
+        color: base.$color-dark;
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+@use 'base';
+
+.sidebar {
+  grid-area: sidebar;
+  background-color: base.$color-dark;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 200px;
+  height: 100%;
+  padding: 5px;
+  transition: max-width 0.25s;
+
+  &:not(.expanded) {
+    max-width: 60px;
+  }
+  &-option {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    align-items: center;
+    color: base.$color-text;
+    display: flex;
+    gap: 10px;
+    height: 50px;
+    width: 100%;
+    overflow: hidden;
+    padding: 10px;
+    transition: color 0.25s, background-color 0.25s;
+
+    .icons-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      aspect-ratio: 1/1;
+
+      .icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: opacity 0.25s, visibility 0.25s;
+
+        &:last-child {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+    }
+
+    &:last-child {
+      margin-top: auto;
+    }
+
+    &[aria-current='page'],
+    &:hover {
+      color: base.$color-light-grey;
+
+      .icons-container {
+        .icon {
+          &:first-child {
+            opacity: 0;
+            visibility: hidden;
+          }
+          &:last-child {
+            opacity: 1;
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+}

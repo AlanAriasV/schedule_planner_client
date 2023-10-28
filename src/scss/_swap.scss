@@ -1,0 +1,33 @@
+@use 'base';
+
+.swap-container {
+  position: relative;
+  padding-left: 50px !important;
+
+  > :not(:last-child) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100% - 10px);
+    width: max-content;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+  }
+  > :nth-child(2) {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  &.active,
+  &:hover {
+    > :first-child {
+      opacity: 0;
+      visibility: hidden;
+    }
+    > :nth-child(2) {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
