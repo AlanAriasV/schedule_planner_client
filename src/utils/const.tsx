@@ -6,23 +6,22 @@ import {
   AiOutlineCalendar,
   AiOutlineCheckCircle,
   AiOutlineHome,
-  AiOutlineLogout,
   AiOutlineSetting,
 } from 'react-icons/ai';
 import { Layout } from '../pages';
-import { createBrowserRouter } from 'react-router-dom';
+import { Navigate, createBrowserRouter } from 'react-router-dom';
 
-type SideBarOption = {
+interface SideBarOption {
   name: string;
   path: string;
   iconOutline: JSX.Element;
   iconFill: JSX.Element;
-};
+}
 
 export const sideBarOptions: SideBarOption[] = [
   {
     name: 'Home',
-    path: '/',
+    path: '/home',
     iconOutline: <AiOutlineHome className="icon" />,
     iconFill: <AiFillHome className="icon" />,
   },
@@ -44,14 +43,7 @@ export const sideBarOptions: SideBarOption[] = [
     iconOutline: <AiOutlineSetting className="icon" />,
     iconFill: <AiFillSetting className="icon" />,
   },
-  {
-    name: 'Logout',
-    path: '/logout',
-    iconOutline: <AiOutlineLogout className="icon" />,
-    iconFill: <AiOutlineLogout className="icon" />,
-  },
 ];
-
 export const router = createBrowserRouter(
   [
     {
@@ -60,21 +52,29 @@ export const router = createBrowserRouter(
       children: [
         {
           index: true,
+          element: <Navigate to={'/home'} />,
+        },
+        {
+          path: 'home',
           element: <h1>Home</h1>,
         },
         {
-          path: '/calendar',
+          path: 'calendar',
           element: <h1>Calendar</h1>,
         },
         {
-          path: '/tasks',
+          path: 'tasks',
           element: <h1>Tasks</h1>,
         },
         {
-          path: '/settings',
+          path: 'settings',
           element: <h1>Settings</h1>,
         },
       ],
+    },
+    {
+      path: '*',
+      element: <Navigate to={'/home'} />,
     },
   ],
   {

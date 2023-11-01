@@ -6,14 +6,15 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  max-width: 200px;
+  // max-width: 60px;
   height: 100%;
   padding: 5px;
   transition: max-width 0.25s;
 
-  &:not(.expanded) {
-    max-width: 60px;
-  }
+  // &.expanded {
+  //   max-width: 200px;
+  // }
+
   &-option {
     cursor: pointer;
     background-color: transparent;
@@ -42,10 +43,12 @@
         top: 0;
         left: 0;
         transition: opacity 0.25s, visibility 0.25s;
+        opacity: 0;
+        visibility: hidden;
 
-        &:last-child {
-          opacity: 0;
-          visibility: hidden;
+        &:first-child {
+          opacity: 1;
+          visibility: visible;
         }
       }
     }
@@ -54,7 +57,7 @@
       margin-top: auto;
     }
 
-    &[aria-current='page'],
+    &.active,
     &:hover {
       color: base.$color-light-grey;
 
