@@ -1,43 +1,31 @@
 {
-  "author": "Alan Arias Vargas",
-  "description": "Schedule planner for university subjects",
-  "license": "MIT",
   "name": "schedule_planner_client",
   "private": true,
-  "repository": "https://github.com/AlanAriasV/schedule_planner_client",
+  "version": "0.0.0",
   "type": "module",
-  "version": "1.0.0",
   "scripts": {
     "dev": "vite --host",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "test": "vitest",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@types/react-transition-group": "^4.4.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
-    "react-magic-motion": "^1.0.9",
-    "react-router-dom": "^6.17.0",
-    "react-transition-group": "^4.4.5"
+    "react-router-dom": "^6.18.0",
+    "sass": "^1.69.5"
   },
   "devDependencies": {
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.5.1",
-    "@types/react": "^18.2.33",
-    "@types/react-dom": "^18.2.14",
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.9.0",
-    "@vitejs/plugin-react-swc": "^3.4.0",
-    "eslint": "^8.52.0",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitejs/plugin-react-swc": "^3.3.2",
+    "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
-    "happy-dom": "^12.10.3",
-    "sass": "^1.69.5",
-    "typescript": "^5.2.2",
-    "vite": "^4.5.0",
-    "vitest": "^0.34.6"
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
   }
 }

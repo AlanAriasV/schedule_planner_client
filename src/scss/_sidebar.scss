@@ -1,19 +1,14 @@
-@use 'base';
+@import "base";
 
 .sidebar {
   grid-area: sidebar;
-  background-color: base.$color-dark;
+  background-color: $color-dark;
   display: flex;
   flex-direction: column;
   gap: 5px;
-  // max-width: 60px;
   height: 100%;
   padding: 5px;
   transition: max-width 0.25s;
-
-  // &.expanded {
-  //   max-width: 200px;
-  // }
 
   &-option {
     cursor: pointer;
@@ -21,7 +16,7 @@
     border: none;
     outline: none;
     align-items: center;
-    color: base.$color-text;
+    color: $color-text;
     display: flex;
     gap: 10px;
     height: 50px;
@@ -59,7 +54,7 @@
 
     &.active,
     &:hover {
-      color: base.$color-light-grey;
+      color: $color-light-grey;
 
       .icons-container {
         .icon {

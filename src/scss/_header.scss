@@ -1,8 +1,8 @@
-@use 'base';
+@import "base";
 
 .header {
   grid-area: header;
-  background-color: base.$color-white;
+  background-color: $color-white;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -11,13 +11,13 @@
   z-index: 1;
 
   .header-title {
-    font-size: base.$text-md3;
+    font-size: $text-md2;
     text-transform: capitalize;
     span {
-      color: base.$color-grey;
+      color: $color-grey;
 
       &:last-child {
-        color: base.$color-dark;
+        color: $color-dark;
       }
     }
   }

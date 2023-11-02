@@ -1,0 +1,15 @@
+@import "base";
+
+.schedule-edit-container {
+  display: grid;
+  grid-template-columns: 70% auto;
+  grid-template-rows: repeat(3, calc((100% / 3) - (40px / 3)));
+  grid-template-areas:
+    "schedule subjects"
+    "schedule teachers"
+    "schedule laboratories";
+  gap: 20px;
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+}

@@ -10,10 +10,7 @@ export default function CustomButton({
   onClick,
 }: CustomButtonProps) {
   return (
-    <button
-      className={'sidebar-option'}
-      onClick={onClick}
-    >
+    <button className={"sidebar-option"} onClick={onClick}>
       {icon && <div className="icons-container">{icon}</div>}
       <p>{name}</p>
     </button>

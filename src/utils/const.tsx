@@ -1,15 +1,11 @@
 import {
-  AiFillCalendar,
-  AiFillCheckCircle,
   AiFillHome,
   AiFillSetting,
-  AiOutlineCalendar,
-  AiOutlineCheckCircle,
   AiOutlineHome,
   AiOutlineSetting,
-} from 'react-icons/ai';
-import { Layout } from '../pages';
-import { Navigate, createBrowserRouter } from 'react-router-dom';
+} from "react-icons/ai";
+import { Navigate, createBrowserRouter } from "react-router-dom";
+import { Layout, Schedule, ScheduleEdit } from "src/pages";
 
 interface SideBarOption {
   name: string;
@@ -20,26 +16,14 @@ interface SideBarOption {
 
 export const sideBarOptions: SideBarOption[] = [
   {
-    name: 'Home',
-    path: '/home',
+    name: "Home",
+    path: "/home",
     iconOutline: <AiOutlineHome className="icon" />,
     iconFill: <AiFillHome className="icon" />,
   },
   {
-    name: 'Calendar',
-    path: '/calendar',
-    iconOutline: <AiOutlineCalendar className="icon" />,
-    iconFill: <AiFillCalendar className="icon" />,
-  },
-  {
-    name: 'Tasks',
-    path: '/tasks',
-    iconOutline: <AiOutlineCheckCircle className="icon" />,
-    iconFill: <AiFillCheckCircle className="icon" />,
-  },
-  {
-    name: 'Settings',
-    path: '/settings',
+    name: "Edit Schedule",
+    path: "/edit-schedule",
     iconOutline: <AiOutlineSetting className="icon" />,
     iconFill: <AiFillSetting className="icon" />,
   },
@@ -47,39 +31,31 @@ export const sideBarOptions: SideBarOption[] = [
 export const router = createBrowserRouter(
   [
     {
-      path: '/',
+      path: "/",
       element: <Layout />,
       children: [
         {
           index: true,
-          element: <Navigate to={'/home'} />,
+          element: <Navigate to={"/home"} />,
         },
         {
-          path: 'home',
-          element: <h1>Home</h1>,
+          path: "home",
+          element: <Schedule />,
         },
         {
-          path: 'calendar',
-          element: <h1>Calendar</h1>,
-        },
-        {
-          path: 'tasks',
-          element: <h1>Tasks</h1>,
-        },
-        {
-          path: 'settings',
-          element: <h1>Settings</h1>,
+          path: "edit-schedule",
+          element: <ScheduleEdit />,
         },
       ],
     },
     {
-      path: '*',
-      element: <Navigate to={'/home'} />,
+      path: "*",
+      element: <Navigate to={"/home"} />,
     },
   ],
   {
     future: {
       v7_normalizeFormMethod: true,
     },
-  },
+  }
 );

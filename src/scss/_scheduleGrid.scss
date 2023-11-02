@@ -1,0 +1,61 @@
+@import "base";
+
+.schedule-visualizer {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.schedule-grid {
+  width: 100%;
+  border: 1px solid black;
+  border-spacing: 5px 15px;
+
+  th {
+    position: sticky;
+    top: 0;
+    background-color: #f9f8f8;
+    border: 1px solid black;
+    padding: 5px;
+    font-size: 1.5em;
+  }
+
+  td {
+    padding: 5px;
+    background-color: $color-grey;
+  }
+
+  .schedule-info {
+    &__container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      grid-template-areas:
+        "number code"
+        "subject subject"
+        "teacher place";
+    }
+
+    &__number {
+      grid-area: number;
+    }
+
+    &__code {
+      justify-self: end;
+      grid-area: code;
+    }
+
+    &__name {
+      justify-self: center;
+      grid-area: subject;
+    }
+
+    &__teacher {
+      grid-area: teacher;
+    }
+
+    &__place {
+      justify-self: end;
+      grid-area: place;
+    }
+  }
+}

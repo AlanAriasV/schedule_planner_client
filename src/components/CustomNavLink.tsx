@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 
 interface CustomNavLinkProps {
   iconFill?: JSX.Element;
@@ -14,10 +14,7 @@ export default function CustomNavLink({
   path,
 }: CustomNavLinkProps) {
   return (
-    <NavLink
-      className={'sidebar-option'}
-      to={path}
-    >
+    <NavLink className={"sidebar-option"} to={path}>
       {(iconOutline || iconFill) && (
         <div className="icons-container">
           {iconOutline && iconOutline}

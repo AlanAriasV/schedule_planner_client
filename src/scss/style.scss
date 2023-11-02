@@ -1,6 +1,9 @@
-@use 'base';
-@use 'sidebar';
-@use 'header';
+@use "base";
+@use "sidebar";
+@use "header";
+@use "scheduleEdit";
+@use "scheduleGrid";
+@use "cards";
 
 * {
   margin: 0;
@@ -12,17 +15,17 @@
 
 body {
   height: 100vh;
-  width: 100vw;
+  width: 100%;
 }
 
 #root {
   background-color: base.$color-light-grey;
   display: grid;
   grid-template-columns: auto 1fr;
-  grid-template-rows: 100px 1fr;
+  grid-template-rows: 60px 1fr;
   grid-template-areas:
-    'sidebar header'
-    'sidebar content';
+    "sidebar header"
+    "sidebar content";
   height: 100%;
   width: 100%;
 }
