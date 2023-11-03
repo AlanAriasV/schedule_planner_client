@@ -1,11 +1,11 @@
 import {
   AiFillHome,
-  AiFillSetting,
+  AiFillSchedule,
   AiOutlineHome,
-  AiOutlineSetting,
-} from "react-icons/ai";
-import { Navigate, createBrowserRouter } from "react-router-dom";
-import { Layout, Schedule, ScheduleEdit } from "src/pages";
+  AiOutlineSchedule,
+} from 'react-icons/ai';
+import { Navigate, createBrowserRouter } from 'react-router-dom';
+import { Layout, Schedule, ScheduleEdit } from 'src/pages';
 
 interface SideBarOption {
   name: string;
@@ -16,46 +16,46 @@ interface SideBarOption {
 
 export const sideBarOptions: SideBarOption[] = [
   {
-    name: "Home",
-    path: "/home",
+    name: 'Home',
+    path: '/home',
     iconOutline: <AiOutlineHome className="icon" />,
     iconFill: <AiFillHome className="icon" />,
   },
   {
-    name: "Edit Schedule",
-    path: "/edit-schedule",
-    iconOutline: <AiOutlineSetting className="icon" />,
-    iconFill: <AiFillSetting className="icon" />,
+    name: 'Edit Schedule',
+    path: '/edit-schedule',
+    iconOutline: <AiOutlineSchedule className="icon" />,
+    iconFill: <AiFillSchedule className="icon" />,
   },
 ];
 export const router = createBrowserRouter(
   [
     {
-      path: "/",
+      path: '/',
       element: <Layout />,
       children: [
         {
           index: true,
-          element: <Navigate to={"/home"} />,
+          element: <Navigate to={'/home'} />,
         },
         {
-          path: "home",
+          path: 'home',
           element: <Schedule />,
         },
         {
-          path: "edit-schedule",
+          path: 'edit-schedule',
           element: <ScheduleEdit />,
         },
       ],
     },
     {
-      path: "*",
-      element: <Navigate to={"/home"} />,
+      path: '*',
+      element: <Navigate to={'/home'} />,
     },
   ],
   {
     future: {
       v7_normalizeFormMethod: true,
     },
-  }
+  },
 );

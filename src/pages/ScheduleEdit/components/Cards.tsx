@@ -11,7 +11,7 @@ export default function CardContainer({
 }: CardContainerProps) {
   return (
     <section
-      className={'section-container'}
+      className={'section-card-container'}
       data-type={dataType}
     >
       <div className="card-container">
@@ -30,8 +30,10 @@ interface CardProps {
 export function Card({ name, code }: CardProps) {
   return (
     <div className="card">
-      {/* label */}
+      <span className="card-label-name">Nombre:</span>
       <span className="card-name">{name}</span>
+      <hr />
+      <span className="card-label-code">Código:</span>
       <span className="card-code">{code}</span>
     </div>
   );

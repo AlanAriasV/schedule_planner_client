@@ -1,14 +1,21 @@
 interface Subject {
   code: string;
   name: string;
+  teacher: string;
+  place: string;
 }
-
-interface Day {
-  day: string;
+interface ScheduleBlock {
+  blockNumber: number;
   subject: Subject;
 }
 
-interface BlockSchedulePerDay {
+interface ScheduleDay {
+  dayName: string;
+  blocks: ScheduleBlock[];
+}
+
+interface BlockHours {
   blockNumber: number;
-  days: Day[];
+  start: string;
+  end: string;
 }

@@ -1,27 +1,23 @@
-@import "base";
+@import 'base';
 
 $data_types: (
-  "teachers": "Docente:",
-  "laboratories": "Laboratorio:",
-  "subjects": "Asignaturas:",
+  'schedule': 'Horario:',
+  'teachers': 'Docente:',
+  'laboratories': 'Laboratorio:',
+  'subjects': 'Asignaturas:',
 );
 
 @mixin labelBefore() {
   @each $key, $value in $data_types {
-    .section-container[data-type="#{$key}"] {
+    .section-card-container[data-type='#{$key}'] {
       grid-area: #{$key};
-      .card-container .card .card-name {
-        &::before {
-          content: $value;
-        }
-      }
     }
   }
 }
 
 @include labelBefore();
 
-.section-container {
+.section-card-container {
   position: relative;
   height: 100%;
   width: 100%;
@@ -29,11 +25,11 @@ $data_types: (
   .card-container {
     background-color: $color-white;
     border-radius: 1rem;
-    box-shadow: 0 2.5px 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
     display: grid;
     gap: 1rem;
     grid-auto-rows: 60px;
-    height: 240px;
+    height: calc(100% - 20px);
     margin-top: 20px;
     overflow-y: scroll;
     padding-top: 50px;
@@ -41,11 +37,12 @@ $data_types: (
     width: 100%;
 
     h3 {
+      font-size: 2.5vw;
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 1;
-      background-color: $color-dark;
+      background-color: $color-purple;
       color: $color-white;
       min-width: max-content;
       width: 80%;
@@ -61,65 +58,51 @@ $data_types: (
 
     .card {
       cursor: grab;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
       border-radius: 0.7rem;
       transform: scale(0.95);
-      transition: transform 0.25s;
+      transition: transform 0.25s, box-shadow 0.25s;
 
-      display: flex;
-      align-items: center;
-      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 65% 1px auto;
+      grid-auto-rows: 50%;
+      grid-template-areas:
+        'card-label-name hr card-label-code'
+        'card-name hr card-code';
 
-      position: relative;
+      overflow: hidden;
+
+      .card-label-name {
+        grid-area: card-label-name;
+        margin-top: auto;
+      }
       .card-name {
-        transform: translateY(50%);
-        flex: 3;
-
-        &::before {
-          position: absolute;
-          display: inline-block;
-          top: 0;
-          left: 0;
-          transform: translateY(-100%);
-        }
+        grid-area: card-name;
       }
 
+      .card-label-code {
+        margin-top: auto;
+        grid-area: card-label-code;
+      }
       .card-code {
-        transform: translateY(50%);
-        flex: 2;
-        padding-left: 1rem;
-
-        &::before {
-          position: absolute;
-          content: "Código:";
-          display: inline-block;
-          top: 0;
-          left: 1rem;
-          transform: translateY(-100%);
-        }
-
-        &::after {
-          position: absolute;
-          content: "";
-          height: 50px;
-          width: 1px;
-          background-color: rgba(0, 0, 0, 0.5);
-          top: 50%;
-          left: 0;
-          transform: translate(-50%, -70%);
-        }
+        grid-area: card-code;
       }
 
+      hr {
+        grid-area: hr;
+      }
       span {
         font-size: $text-md2;
         white-space: nowrap;
-        // overflow: hidden;
+        overflow: hidden;
         text-overflow: ellipsis;
-        width: 2rem;
+        padding: 0 1rem;
+        width: 100%;
       }
 
       &:hover {
         transform: scale(1);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
       }
     }
   }

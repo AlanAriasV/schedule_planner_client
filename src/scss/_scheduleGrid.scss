@@ -1,61 +1,75 @@
-@import "base";
-
-.schedule-visualizer {
-  height: 100%;
-  overflow-y: scroll;
-}
+@import 'base';
 
 .schedule-grid {
-  width: 100%;
-  border: 1px solid black;
-  border-spacing: 5px 15px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
 
-  th {
-    position: sticky;
-    top: 0;
-    background-color: #f9f8f8;
-    border: 1px solid black;
-    padding: 5px;
-    font-size: 1.5em;
-  }
-
-  td {
-    padding: 5px;
-    background-color: $color-grey;
-  }
-
-  .schedule-info {
-    &__container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr 1fr;
-      grid-template-areas:
-        "number code"
-        "subject subject"
-        "teacher place";
+  &__column {
+    &:first-child {
+      border-radius: 0.7rem 0 0 0.7rem;
     }
 
-    &__number {
+    &:last-child {
+      border-radius: 0 0.7rem 0.7rem 0;
+    }
+
+    &:nth-child(even) {
+      border: 1px solid $color-dark-grey;
+      border-left: none;
+      border-right: none;
+    }
+
+    &:nth-child(odd) {
+      border: 1px solid $color-dark-grey;
+    }
+
+    padding: 10px;
+  }
+
+  &__column-name {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  &__column-blocks {
+    display: grid;
+    gap: 10px;
+  }
+
+  &__block {
+    display: grid;
+    border: 1px solid #ddd;
+    padding: 5px;
+    grid-template-areas:
+      'number  code'
+      'subject subject'
+      'teacher  place';
+
+    &-number {
       grid-area: number;
+      font-weight: bold;
     }
 
-    &__code {
-      justify-self: end;
+    &-subject-code {
       grid-area: code;
+      justify-self: end;
     }
 
-    &__name {
-      justify-self: center;
+    &-subject-name {
       grid-area: subject;
+      justify-self: center;
+      align-self: center;
+      text-align: center;
     }
 
-    &__teacher {
+    &-subject-teacher {
       grid-area: teacher;
     }
 
-    &__place {
-      justify-self: end;
+    &-subject-place {
       grid-area: place;
+      justify-self: end;
+      text-align: end;
     }
   }
 }

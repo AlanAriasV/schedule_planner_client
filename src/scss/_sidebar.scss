@@ -1,4 +1,4 @@
-@import "base";
+@import 'base';
 
 .sidebar {
   grid-area: sidebar;
@@ -23,6 +23,7 @@
     width: 100%;
     overflow: hidden;
     padding: 10px;
+    text-wrap: nowrap;
     transition: color 0.25s, background-color 0.25s;
 
     .icons-container {

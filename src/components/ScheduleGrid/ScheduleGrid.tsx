@@ -1,19 +1,7 @@
-interface Props {
-  days: string[];
-  rows: React.ReactNode;
-}
+type ScheduleGridProps = {
+  children: React.ReactNode;
+};
 
-export default function ScheduleGrid({ days, rows }: Props) {
-  return (
-    <table className="schedule-grid">
-      <thead>
-        <tr>
-          {days.map(day => (
-            <th key={day}>{day}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>{rows}</tbody>
-    </table>
-  );
+export default function ScheduleGrid({ children }: ScheduleGridProps) {
+  return <div className="schedule-grid">{children}</div>;
 }
