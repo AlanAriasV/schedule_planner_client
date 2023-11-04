@@ -2,7 +2,7 @@
 
 .schedule-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
 
   &__column {
     &:first-child {
@@ -50,23 +50,23 @@
       font-weight: bold;
     }
 
-    &-subject-code {
+    &__info-code {
       grid-area: code;
       justify-self: end;
     }
 
-    &-subject-name {
+    &__info-name {
       grid-area: subject;
       justify-self: center;
       align-self: center;
       text-align: center;
     }
 
-    &-subject-teacher {
+    &__info-teacher {
       grid-area: teacher;
     }
 
-    &-subject-place {
+    &__info-place {
       grid-area: place;
       justify-self: end;
       text-align: end;

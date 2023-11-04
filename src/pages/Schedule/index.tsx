@@ -1,4 +1,5 @@
 import { ScheduleGrid, ScheduleColumn, ScheduleBlock } from 'src/components';
+import ScheduleInfo from 'src/components/ScheduleGrid/ScheduleInfo';
 
 export const schedule: ScheduleDay[] = [
   {
@@ -89,16 +90,35 @@ export default function Schedule() {
       <h1 className="schedule-visualizer__title">Schedule Visualizer</h1>
       <div className="schedule-visualizer__container">
         <ScheduleGrid>
+          <ScheduleColumn title="Time">
+            {blockHours.map((blockHour, blockIndex) => (
+              <ScheduleBlock
+                key={blockIndex}
+                blockNumber={blockIndex + 1}
+              >
+                <ScheduleInfo
+                  subject={{
+                    code: '',
+                    name: blockHour,
+                    teacher: '',
+                    place: '',
+                  }}
+                />
+              </ScheduleBlock>
+            ))}
+          </ScheduleColumn>
           {schedule.map(({ dayName: day, blocks }, dayIndex) => (
             <ScheduleColumn
               key={dayIndex}
               title={day}
             >
-              {blocks.map((block, blockIndex) => (
+              {blocks.map((blockInfo, blockIndex) => (
                 <ScheduleBlock
                   key={blockIndex}
-                  block={block}
-                />
+                  blockNumber={blockInfo.blockNumber}
+                >
+                  <ScheduleInfo subject={blockInfo.subject} />
+                </ScheduleBlock>
               ))}
             </ScheduleColumn>
           ))}
