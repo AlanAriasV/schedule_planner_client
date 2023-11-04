@@ -1,11 +1,11 @@
 interface ScheduleColumnProps {
-  title: string;
   children: React.ReactNode;
+  title: string;
 }
 
 export default function ScheduleColumn({
-  title,
   children,
+  title,
 }: ScheduleColumnProps) {
   return (
     <div className="schedule-grid__column">

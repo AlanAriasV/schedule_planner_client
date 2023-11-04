@@ -8,8 +8,6 @@ export default function Sidebar() {
     localStorage.getItem('expanded') === 'true' || false,
   );
 
-  // const sideBarClass = `sidebar${expanded ? ' expanded' : ''}`;
-
   useEffect(() => {
     localStorage.setItem('expanded', expanded.toString());
   }, [expanded]);

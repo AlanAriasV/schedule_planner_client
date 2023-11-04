@@ -1,9 +1,25 @@
-import { ScheduleGrid, ScheduleColumn, ScheduleBlock } from 'src/components';
+import {
+  ScheduleGrid,
+  ScheduleColumn,
+  ScheduleBlock,
+  ScheduleInfo,
+} from 'src/components';
 import { Card, CardContainer } from './components';
-import { schedule } from '../Schedule';
+import { blockHours, schedule } from '../Schedule';
+import { useState } from 'react';
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+  DroppableProvided,
+  DroppableStateSnapshot,
+  ResponderProvided,
+} from 'react-beautiful-dnd';
+import { ScheduleDay } from 'src/utils/interfaces';
 
 interface Teacher {
-  id: number;
+  code: string;
   name: string;
   career: {
     code: string;
@@ -14,7 +30,7 @@ interface Teacher {
 
 const teachers: Teacher[] = [
   {
-    id: 1,
+    code: '1',
     name: 'John Doe',
     career: {
       code: 'ICCI',
@@ -23,7 +39,7 @@ const teachers: Teacher[] = [
     },
   },
   {
-    id: 2,
+    code: '2',
     name: 'Jane Smith',
     career: {
       code: 'IE',
@@ -32,7 +48,7 @@ const teachers: Teacher[] = [
     },
   },
   {
-    id: 3,
+    code: '3',
     name: 'Robert Johnson',
     career: {
       code: 'IM',
@@ -41,7 +57,7 @@ const teachers: Teacher[] = [
     },
   },
   {
-    id: 4,
+    code: '4',
     name: 'Michael Brown',
     career: {
       code: 'ICCI',
@@ -50,7 +66,7 @@ const teachers: Teacher[] = [
     },
   },
   {
-    id: 5,
+    code: '5',
     name: 'Sarah Davis',
     career: {
       code: 'ICCI',
@@ -59,8 +75,8 @@ const teachers: Teacher[] = [
     },
   },
   {
-    id: 6,
-    name: 'David Miller',
+    code: '6',
+    name: 'Davcode M"i"ller',
     career: {
       code: 'ICCI',
       name: 'Ingeniería Civil en Computación e Informática',
@@ -68,7 +84,7 @@ const teachers: Teacher[] = [
     },
   },
   {
-    id: 7,
+    code: '7',
     name: 'Jessica Wilson',
     career: {
       code: 'II',
@@ -77,7 +93,7 @@ const teachers: Teacher[] = [
     },
   },
   {
-    id: 8,
+    code: '8',
     name: 'Daniel Moore',
     career: {
       code: 'ICCI',
@@ -86,7 +102,7 @@ const teachers: Teacher[] = [
     },
   },
   {
-    id: 9,
+    code: '9',
     name: 'Emily Taylor',
     career: {
       code: 'IEE',
@@ -95,7 +111,7 @@ const teachers: Teacher[] = [
     },
   },
   {
-    id: 10,
+    code: '10',
     name: 'James Anderson',
     career: {
       code: 'IMT',
@@ -155,65 +171,201 @@ const laboratories: Laboratory[] = [
   { code: 'LAB30', name: 'Laboratorio 30' },
 ];
 
+// interface ID {
+//   uuid: `${string}-${string}-${string}-${string}-${string}`;
+// }
+
+interface DnDItem<T> {
+  [key: string]: {
+    type: string;
+    name: string;
+    items: T[];
+  };
+}
+
+const initialData: DnDItem<ScheduleDay | Subject | Teacher | Laboratory>[] = [
+  {
+    [crypto.randomUUID()]: {
+      items: schedule,
+      name: 'Horario',
+      type: 'schedule',
+    },
+  },
+  {
+    [crypto.randomUUID()]: {
+      items: subjects,
+      name: 'Asignaturas',
+      type: 'subjects',
+    },
+  },
+  {
+    [crypto.randomUUID()]: {
+      items: teachers,
+      name: 'Profesores',
+      type: 'teachers',
+    },
+  },
+  {
+    [crypto.randomUUID()]: {
+      items: laboratories,
+      name: 'Laboratorios',
+      type: 'laboratories',
+    },
+  },
+];
+
 export default function ScheduleEdit() {
+  const [[schedule, subjects, teachers, laboratories], setItems] =
+    useState(initialData);
+
+  const onDragEnd = (result: DropResult) => {
+    //TODO: move item from one list to another
+  };
+
   return (
     <main className="schedule-edit-container">
-      <CardContainer
-        title="Horario"
-        dataType="schedule"
-      >
-        <ScheduleGrid>
-          {schedule.map(({ dayName: day, blocks }, dayIndex) => (
-            <ScheduleColumn
-              key={dayIndex}
-              title={day}
-            >
-              {blocks.map((block, blockIndex) => (
-                <ScheduleBlock
-                  key={blockIndex}
-                  block={block}
-                />
+      <DragDropContext onDragEnd={onDragEnd}>
+        {Object.entries(schedule).map(([uuid, { name, items }]) => (
+          <CardContainer
+            dataType="schedule"
+            title={name}
+            key={uuid}
+            style={{ gridTemplateRows: '100%', overflow: 'hidden' }}
+          >
+            <ScheduleGrid key={uuid}>
+              <ScheduleColumn title="Hora">
+                {blockHours.map((blockHour, blockIndex) => (
+                  <ScheduleBlock
+                    key={blockIndex}
+                    blockNumber={blockIndex + 1}
+                  >
+                    <ScheduleInfo
+                      text={blockHour}
+                      className="name"
+                    />
+                  </ScheduleBlock>
+                ))}
+              </ScheduleColumn>
+              {(items as ScheduleDay[]).map(({ dayName: day, blocks }) => (
+                <ScheduleColumn
+                  key={day}
+                  title={day}
+                >
+                  {blocks.map(blockInfo => (
+                    <Droppable
+                      key={`${blockInfo.blockNumber}-${day}`}
+                      droppableId={`${blockInfo.blockNumber}-${day}`}
+                    >
+                      {(provided, _) => (
+                        <ScheduleBlock
+                          blockNumber={blockInfo.blockNumber}
+                          droppableProps={provided.droppableProps}
+                          reference={provided.innerRef}
+                        >
+                          <ScheduleInfo
+                            text={blockInfo.subject['code']}
+                            className={'code'}
+                          />
+                          {['name', 'teacher', 'place'].map(
+                            (className, index) => (
+                              <Draggable
+                                key={`${day}-${blockInfo.blockNumber}-${className}`}
+                                draggableId={`${day}-${blockInfo.blockNumber}-${className}`}
+                                index={index}
+                              >
+                                {(provided, _) => (
+                                  <ScheduleInfo
+                                    text={
+                                      blockInfo.subject[
+                                        className as keyof Subject
+                                      ]
+                                    }
+                                    className={className}
+                                    reference={provided.innerRef}
+                                    draggableProps={provided.draggableProps}
+                                    dragHandleProps={provided.dragHandleProps}
+                                  />
+                                )}
+                              </Draggable>
+                            ),
+                          )}
+                          {provided.placeholder}
+                        </ScheduleBlock>
+                      )}
+                    </Droppable>
+                  ))}
+                </ScheduleColumn>
               ))}
-            </ScheduleColumn>
-          ))}
-        </ScheduleGrid>
-      </CardContainer>
-      <CardContainer
-        title="Asignaturas"
-        dataType="subjects"
-      >
-        {subjects.map(subject => (
-          <Card
-            key={subject.code}
-            name={subject.name}
-            code={subject.code}
-          />
+            </ScheduleGrid>
+          </CardContainer>
         ))}
-      </CardContainer>
-      <CardContainer
-        title="Docentes"
-        dataType="teachers"
-      >
-        {teachers.map(teacher => (
-          <Card
-            key={teacher.id}
-            name={teacher.name}
-            code={teacher.career.code}
-          />
-        ))}
-      </CardContainer>
-      <CardContainer
-        title="Laboratorios"
-        dataType="laboratories"
-      >
-        {laboratories.map(laboratory => (
-          <Card
-            key={laboratory.code}
-            name={laboratory.name}
-            code={laboratory.code}
-          />
-        ))}
-      </CardContainer>
+        {[subjects, teachers, laboratories].map(obj =>
+          Object.entries(obj).map(([uuid, { items, name, type }]) => (
+            <Droppable
+              droppableId={uuid}
+              key={uuid}
+              isDropDisabled={true}
+            >
+              {(provided, _) => (
+                <CardContainer
+                  dataType={type}
+                  title={name}
+                  reference={provided.innerRef}
+                  droppableProps={provided.droppableProps}
+                >
+                  {type !== 'teachers' && (
+                    <>
+                      {(items as (Subject | Laboratory)[]).map(
+                        ({ code, name }, index) => (
+                          <Draggable
+                            draggableId={code}
+                            index={index}
+                            key={code}
+                          >
+                            {(provided, _) => (
+                              <Card
+                                code={code}
+                                name={name}
+                                reference={provided.innerRef}
+                                draggableProps={provided.draggableProps}
+                                dragHandleProps={provided.dragHandleProps}
+                              />
+                            )}
+                          </Draggable>
+                        ),
+                      )}
+                    </>
+                  )}
+                  {type === 'teachers' && (
+                    <>
+                      {(items as Teacher[]).map(
+                        ({ code, name, career }, index) => (
+                          <Draggable
+                            draggableId={code}
+                            index={index}
+                            key={code}
+                          >
+                            {(provided, _) => (
+                              <Card
+                                code={career.code}
+                                name={name}
+                                reference={provided.innerRef}
+                                draggableProps={provided.draggableProps}
+                                dragHandleProps={provided.dragHandleProps}
+                              />
+                            )}
+                          </Draggable>
+                        ),
+                      )}
+                    </>
+                  )}
+                  {provided.placeholder}
+                </CardContainer>
+              )}
+            </Droppable>
+          )),
+        )}
+      </DragDropContext>
     </main>
   );
 }

@@ -1,49 +1,73 @@
 @import 'base';
 
-.schedule-grid {
+.schedule-visualizer {
+  grid-area: content;
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 75px calc(100% - 75px);
+
+  &__container {
+    padding: 5px;
+  }
+}
+
+.schedule-grid {
+  position: relative;
+  display: grid;
+  height: 100%;
+  overflow-y: scroll;
+  grid-template-columns: repeat(6, calc(100% / 6));
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 0.7rem;
+
+  &.scrolling {
+    .schedule-grid__column-name {
+      border-radius: 0 0 0.5rem 0.5rem;
+    }
+  }
 
   &__column {
-    &:first-child {
-      border-radius: 0.7rem 0 0 0.7rem;
+    padding: 10px;
+
+    &:nth-child(even) {
+      border-left: 1px solid $color-dark-grey;
+      border-right: 1px solid $color-dark-grey;
     }
 
     &:last-child {
-      border-radius: 0 0.7rem 0.7rem 0;
-    }
-
-    &:nth-child(even) {
-      border: 1px solid $color-dark-grey;
-      border-left: none;
       border-right: none;
     }
 
-    &:nth-child(odd) {
-      border: 1px solid $color-dark-grey;
+    &-name {
+      transition: all 0.1s ease;
+      position: sticky;
+      top: 0;
+      font-weight: bold;
+      margin-bottom: 10px;
+      background-color: $color-primary;
+      color: $color-white;
+      border-radius: 0.5rem;
+      box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+      padding: 5px;
     }
 
-    padding: 10px;
-  }
-
-  &__column-name {
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-
-  &__column-blocks {
-    display: grid;
-    gap: 10px;
+    &-blocks {
+      display: grid;
+      grid-auto-columns: 100%;
+      grid-template-rows: repeat(14, 150px);
+      gap: 10px;
+    }
   }
 
   &__block {
     display: grid;
     border: 1px solid #ddd;
     padding: 5px;
+    grid-template-columns: repeat(2, 50%);
+
     grid-template-areas:
-      'number  code'
+      'number code'
       'subject subject'
-      'teacher  place';
+      'teacher place';
 
     &-number {
       grid-area: number;
@@ -64,12 +88,14 @@
 
     &__info-teacher {
       grid-area: teacher;
+      align-self: flex-end;
     }
 
     &__info-place {
       grid-area: place;
       justify-self: end;
       text-align: end;
+      align-self: flex-end;
     }
   }
 }

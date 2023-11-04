@@ -4,6 +4,9 @@
 @use 'scheduleEdit';
 @use 'scheduleGrid';
 @use 'cards';
+@use 'scrollbar';
+@use 'login';
+@use 'inputs';
 
 * {
   margin: 0;
@@ -22,7 +25,7 @@ body {
   background-color: base.$color-light-grey;
   display: grid;
   grid-template-columns: auto 1fr;
-  grid-template-rows: 60px 1fr;
+  grid-template-rows: 60px calc(100vh - 60px);
   grid-template-areas:
     'sidebar header'
     'sidebar content';
@@ -69,5 +72,5 @@ p {
   font-size: base.$text-md3;
 }
 span {
-  font-size: base.$text-md2;
+  font-size: base.$text-md1;
 }

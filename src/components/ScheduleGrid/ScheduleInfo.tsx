@@ -1,15 +1,27 @@
+import { DraggableProps } from 'src/utils/interfaces';
+
 interface ScheduleInfoProps {
-  subject: Subject;
+  // subject: Subject;
+  className: string;
+  reference?: React.Ref<HTMLSpanElement>;
+  text: string;
 }
 
-export default function ScheduleInfo({ subject }: ScheduleInfoProps) {
-  const { code, name, teacher, place } = subject;
+export default function ScheduleInfo({
+  className,
+  draggableProps,
+  dragHandleProps,
+  reference,
+  text,
+}: ScheduleInfoProps & DraggableProps) {
   return (
-    <>
-      <span className="schedule-grid__block__info-code">{code}</span>
-      <span className="schedule-grid__block__info-name">{name}</span>
-      <span className="schedule-grid__block__info-teacher">{teacher}</span>
-      <span className="schedule-grid__block__info-place">{place}</span>
-    </>
+    <div
+      ref={reference}
+      className={`schedule-grid__block__info-${className}`}
+      {...draggableProps}
+      {...dragHandleProps}
+    >
+      {text}
+    </div>
   );
 }

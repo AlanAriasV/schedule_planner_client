@@ -1,3 +1,9 @@
+import {
+  DraggableProvidedDragHandleProps,
+  DraggableProvidedDraggableProps,
+  DroppableProvidedProps,
+} from 'react-beautiful-dnd';
+
 interface Subject {
   code: string;
   name: string;
@@ -18,4 +24,12 @@ interface BlockHours {
   blockNumber: number;
   start: string;
   end: string;
+}
+interface DraggableProps {
+  dragHandleProps?: DraggableProvidedDragHandleProps | null | undefined;
+  draggableProps?: DraggableProvidedDraggableProps;
+}
+
+interface DroppableProps {
+  droppableProps?: DroppableProvidedProps;
 }

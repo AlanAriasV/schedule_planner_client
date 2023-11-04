@@ -42,7 +42,7 @@ $data_types: (
       align-items: center;
       justify-content: center;
       z-index: 1;
-      background-color: $color-purple;
+      background-color: $color-dark;
       color: $color-white;
       min-width: max-content;
       width: 80%;
@@ -58,6 +58,7 @@ $data_types: (
 
     .card {
       cursor: grab;
+      background-color: $color-white;
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
       border-radius: 0.7rem;
       transform: scale(0.95);

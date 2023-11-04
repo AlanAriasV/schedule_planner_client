@@ -5,7 +5,7 @@ import {
   AiOutlineSchedule,
 } from 'react-icons/ai';
 import { Navigate, createBrowserRouter } from 'react-router-dom';
-import { Layout, Schedule, ScheduleEdit } from 'src/pages';
+import { Layout, Login, Schedule, ScheduleEdit } from 'src/pages';
 
 interface SideBarOption {
   name: string;
@@ -51,6 +51,10 @@ export const router = createBrowserRouter(
     {
       path: '*',
       element: <Navigate to={'/home'} />,
+    },
+    {
+      path: 'login',
+      element: <Login />,
     },
   ],
   {
