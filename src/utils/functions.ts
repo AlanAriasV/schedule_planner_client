@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 export function addScrolledClass(e: React.UIEvent<HTMLDivElement>) {
   const scroll = e.currentTarget;
   const bottom = scroll.scrollHeight - scroll.scrollTop === scroll.clientHeight;

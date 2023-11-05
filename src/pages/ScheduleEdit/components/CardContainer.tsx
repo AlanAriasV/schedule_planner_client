@@ -1,5 +1,5 @@
+import { DroppableProps } from 'src/utils/const';
 import { addScrolledClass } from 'src/utils/functions';
-import { DraggableProps, DroppableProps } from 'src/utils/interfaces';
 
 interface CardContainerProps {
   title: string;
@@ -33,34 +33,5 @@ export default function CardContainer({
         {children}
       </div>
     </section>
-  );
-}
-
-interface CardProps {
-  name: string;
-  code: string;
-  reference?: React.Ref<HTMLDivElement>;
-}
-
-export function Card({
-  name,
-  code,
-  reference,
-  dragHandleProps,
-  draggableProps,
-}: CardProps & DraggableProps) {
-  return (
-    <div
-      ref={reference}
-      className="card"
-      {...draggableProps}
-      {...dragHandleProps}
-    >
-      <span className="card-label-name">Nombre:</span>
-      <span className="card-name">{name}</span>
-      <hr />
-      <span className="card-label-code">Código:</span>
-      <span className="card-code">{code}</span>
-    </div>
   );
 }

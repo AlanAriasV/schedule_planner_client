@@ -4,8 +4,14 @@ import {
   AiOutlineHome,
   AiOutlineSchedule,
 } from 'react-icons/ai';
+import {
+  DraggableProvidedDragHandleProps,
+  DraggableProvidedDraggableProps,
+  DroppableProvidedProps,
+} from 'react-beautiful-dnd';
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 import { Layout, Login, Schedule, ScheduleEdit } from 'src/pages';
+import ScheduleManager from 'src/pages/ScheduleManager';
 
 interface SideBarOption {
   name: string;
@@ -20,6 +26,12 @@ export const sideBarOptions: SideBarOption[] = [
     path: '/home',
     iconOutline: <AiOutlineHome className="icon" />,
     iconFill: <AiFillHome className="icon" />,
+  },
+  {
+    name: 'Manage Schedule',
+    path: '/manage-schedule',
+    iconOutline: <AiOutlineSchedule className="icon" />,
+    iconFill: <AiFillSchedule className="icon" />,
   },
   {
     name: 'Edit Schedule',
@@ -43,6 +55,10 @@ export const router = createBrowserRouter(
           element: <Schedule />,
         },
         {
+          path: 'manage-schedule',
+          element: <ScheduleManager />,
+        },
+        {
           path: 'edit-schedule',
           element: <ScheduleEdit />,
         },
@@ -63,3 +79,12 @@ export const router = createBrowserRouter(
     },
   },
 );
+
+export interface DraggableProps {
+  dragHandleProps?: DraggableProvidedDragHandleProps | null | undefined;
+  draggableProps?: DraggableProvidedDraggableProps;
+}
+
+export interface DroppableProps {
+  droppableProps?: DroppableProvidedProps;
+}

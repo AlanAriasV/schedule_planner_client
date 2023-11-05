@@ -1,6 +1,5 @@
 import { ScheduleGrid, ScheduleColumn, ScheduleBlock } from 'src/components';
 import ScheduleInfo from 'src/components/ScheduleGrid/ScheduleInfo';
-import { ScheduleDay, Subject } from 'src/utils/interfaces';
 
 const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 const subjects = [
@@ -36,20 +35,44 @@ const subjects = [
   },
 ];
 
-export const schedule: ScheduleDay[] = days.map(day => ({
+export const scheduleExample: ScheduleDay[] = days.map(day => ({
   dayName: day,
-  blocks: Array.from({ length: 14 }, (_, i) => ({
-    blockNumber: i + 1,
-    subject:
-      Math.random() > 0.5
-        ? subjects[Math.floor(Math.random() * subjects.length)]
-        : {
-            code: '',
-            name: '',
-            teacher: '',
-            place: '',
-          },
-  })),
+  blocks: Array.from({ length: 14 }, (_, i) => {
+    const subject: Subject = {
+      code: '',
+      name: '',
+      times: {
+        chair: 8,
+        laboratory: 4,
+        workshop: 0,
+      },
+    };
+    const teacher: Omit<Teacher, 'career'> = {
+      code: '',
+      name: '',
+    };
+    const laboratory: Laboratory = {
+      code: '',
+      name: '',
+    };
+
+    if (Math.random() > 0.5) {
+      const rn = Math.floor(Math.random() * 5);
+      Object.assign(subject, {
+        code: subjects[rn].code,
+        name: subjects[rn].name,
+      });
+      Object.assign(teacher, { code: rn, name: subjects[rn].teacher });
+      Object.assign(laboratory, { code: rn, name: subjects[rn].place });
+    }
+
+    return {
+      blockNumber: i + 1,
+      subject,
+      teacher,
+      laboratory,
+    };
+  }),
 }));
 
 export const blockHours = ['8:00 - 8:45', '8:45 - 9:30', '9:40 - 10:25'];
@@ -73,28 +96,37 @@ export default function Schedule() {
               </ScheduleBlock>
             ))}
           </ScheduleColumn>
-          {schedule.map(({ dayName: day, blocks }, dayIndex) => (
+          {scheduleExample.map(({ dayName: day, blocks }, dayIndex) => (
             <ScheduleColumn
               key={dayIndex}
               title={day}
             >
-              {blocks.map((blockInfo, blockIndex) => (
-                <ScheduleBlock
-                  key={blockIndex}
-                  blockNumber={blockInfo.blockNumber}
-                >
-                  {['code', 'name', 'teacher', 'place'].map(
-                    (className, index) => (
+              {blocks.map(
+                ({ blockNumber, subject, laboratory, teacher }, blockIndex) => (
+                  <ScheduleBlock
+                    key={blockIndex}
+                    blockNumber={blockNumber}
+                  >
+                    {Object.entries(subject).map(([key, value]) => (
                       <ScheduleInfo
-                        key={index}
-                        text={blockInfo.subject[className as keyof Subject]}
-                        className={className}
+                        key={crypto.randomUUID()}
+                        text={value}
+                        className={key}
                       />
-                    ),
-                  )}
-                  {/* <ScheduleInfo subject={blockInfo.subject} /> */}
-                </ScheduleBlock>
-              ))}
+                    ))}
+                    <ScheduleInfo
+                      key={crypto.randomUUID()}
+                      text={teacher.name}
+                      className={'teacher'}
+                    />
+                    <ScheduleInfo
+                      key={crypto.randomUUID()}
+                      text={laboratory.name}
+                      className={'laboratory'}
+                    />
+                  </ScheduleBlock>
+                ),
+              )}
             </ScheduleColumn>
           ))}
         </ScheduleGrid>

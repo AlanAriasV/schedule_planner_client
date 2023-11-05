@@ -1,0 +1,32 @@
+@import 'base';
+.react-select {
+  z-index: 2;
+
+  &__option {
+    &--is-selected {
+      background-color: $color-primary !important;
+    }
+
+    &--is-focused {
+      background-color: $color-primary !important;
+      color: $color-white !important;
+    }
+  }
+
+  &__control {
+    &--is-focused {
+      border-color: $color-primary !important;
+      box-shadow: 0 0 0 1px $color-primary !important;
+    }
+  }
+}
+
+.select-container {
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+
+  &__label {
+    font-weight: bold;
+  }
+}

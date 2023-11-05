@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { DroppableProps } from 'src/utils/interfaces';
+import { DroppableProps } from 'src/utils/const';
 
 interface ScheduleBlockProps {
   blockNumber: number;

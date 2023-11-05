@@ -3,10 +3,12 @@
 @use 'header';
 @use 'scheduleEdit';
 @use 'scheduleGrid';
+@use 'scheduleManager';
 @use 'cards';
 @use 'scrollbar';
 @use 'login';
 @use 'inputs';
+@use 'select';
 
 * {
   margin: 0;

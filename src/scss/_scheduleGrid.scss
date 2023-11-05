@@ -2,11 +2,14 @@
 
 .schedule-visualizer {
   grid-area: content;
-  display: grid;
-  grid-template-rows: 75px calc(100% - 75px);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 10px;
 
   &__container {
-    padding: 5px;
+    height: 0;
+    flex: 1;
   }
 }
 
@@ -15,22 +18,17 @@
   display: grid;
   height: 100%;
   overflow-y: scroll;
+  overflow-x: hidden;
   grid-template-columns: repeat(6, calc(100% / 6));
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
   border-radius: 0.7rem;
-
-  &.scrolling {
-    .schedule-grid__column-name {
-      border-radius: 0 0 0.5rem 0.5rem;
-    }
-  }
 
   &__column {
     padding: 10px;
 
     &:nth-child(even) {
-      border-left: 1px solid $color-dark-grey;
-      border-right: 1px solid $color-dark-grey;
+      border-left: 1px solid $color-grey;
+      border-right: 1px solid $color-grey;
     }
 
     &:last-child {
@@ -43,7 +41,7 @@
       top: 0;
       font-weight: bold;
       margin-bottom: 10px;
-      background-color: $color-primary;
+      background-color: $color-dark;
       color: $color-white;
       border-radius: 0.5rem;
       box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
@@ -91,11 +89,72 @@
       align-self: flex-end;
     }
 
-    &__info-place {
+    &__info-laboratory {
       grid-area: place;
       justify-self: end;
       text-align: end;
       align-self: flex-end;
+    }
+  }
+}
+
+.scrolling {
+  .schedule-grid__column-name {
+    border-radius: 0 0 0.5rem 0.5rem;
+    z-index: 0;
+    &:after {
+      z-index: -1;
+      content: '';
+      display: block;
+      position: absolute;
+      margin-left: auto;
+      margin-right: auto;
+      left: 0;
+      right: 0;
+      top: 0;
+      text-align: center;
+      height: 10px;
+      background-color: $color-dark;
+      width: 110%;
+      transform: translateX(-5%);
+    }
+
+    h4 {
+      &:before {
+        content: '';
+        position: absolute;
+        left: -15px;
+        top: 0;
+        border: 5px solid $color-light-grey;
+        border-top-right-radius: 7px;
+        width: 5px;
+        height: 5px;
+        background-color: $color-light-grey;
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        right: -15px;
+        top: 0;
+        border: 5px solid $color-light-grey;
+        border-top-left-radius: 7px;
+        width: 5px;
+        height: 5px;
+        background-color: $color-light-grey;
+      }
+
+      &[data-color='white'] {
+        &:before {
+          border-color: $color-white;
+          background-color: $color-white;
+        }
+
+        &:after {
+          border-color: $color-white;
+          background-color: $color-white;
+        }
+      }
     }
   }
 }

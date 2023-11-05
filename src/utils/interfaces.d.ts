@@ -1,18 +1,32 @@
-import {
-  DraggableProvidedDragHandleProps,
-  DraggableProvidedDraggableProps,
-  DroppableProvidedProps,
-} from 'react-beautiful-dnd';
-
 interface Subject {
   code: string;
   name: string;
-  teacher: string;
-  place: string;
+  times: {
+    chair: number;
+    laboratory: number;
+    workshop: number;
+  };
+}
+
+interface Teacher {
+  code: string;
+  name: string;
+  career: {
+    code: string;
+    name: string;
+    subjectCode: string;
+  };
+}
+
+interface Laboratory {
+  code: string;
+  name: string;
 }
 interface ScheduleBlock {
   blockNumber: number;
   subject: Subject;
+  teacher: Omit<Teacher, 'career'>;
+  laboratory: Laboratory;
 }
 
 interface ScheduleDay {
@@ -24,12 +38,4 @@ interface BlockHours {
   blockNumber: number;
   start: string;
   end: string;
-}
-interface DraggableProps {
-  dragHandleProps?: DraggableProvidedDragHandleProps | null | undefined;
-  draggableProps?: DraggableProvidedDraggableProps;
-}
-
-interface DroppableProps {
-  droppableProps?: DroppableProvidedProps;
 }

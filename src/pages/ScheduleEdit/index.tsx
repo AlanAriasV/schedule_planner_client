@@ -5,222 +5,104 @@ import {
   ScheduleInfo,
 } from 'src/components';
 import { Card, CardContainer } from './components';
-import { blockHours, schedule } from '../Schedule';
-import { useState } from 'react';
+import { blockHours } from '../Schedule';
+import { useEffect, useState } from 'react';
 import {
   DragDropContext,
   Draggable,
   DropResult,
   Droppable,
-  DroppableProvided,
-  DroppableStateSnapshot,
-  ResponderProvided,
 } from 'react-beautiful-dnd';
-import { ScheduleDay } from 'src/utils/interfaces';
-
-interface Teacher {
-  code: string;
-  name: string;
-  career: {
-    code: string;
-    name: string;
-    subjectCode: string;
-  };
-}
-
-const teachers: Teacher[] = [
-  {
-    code: '1',
-    name: 'John Doe',
-    career: {
-      code: 'ICCI',
-      name: 'Ingeniería Civil en Computación e Informática',
-      subjectCode: 'CC',
-    },
-  },
-  {
-    code: '2',
-    name: 'Jane Smith',
-    career: {
-      code: 'IE',
-      name: 'Ingeniería Electrónica',
-      subjectCode: 'EE',
-    },
-  },
-  {
-    code: '3',
-    name: 'Robert Johnson',
-    career: {
-      code: 'IM',
-      name: 'Ingeniería Mecánica',
-      subjectCode: 'ME',
-    },
-  },
-  {
-    code: '4',
-    name: 'Michael Brown',
-    career: {
-      code: 'ICCI',
-      name: 'Ingeniería Civil en Computación e Informática',
-      subjectCode: 'CC',
-    },
-  },
-  {
-    code: '5',
-    name: 'Sarah Davis',
-    career: {
-      code: 'ICCI',
-      name: 'Ingeniería Civil en Computación e Informática',
-      subjectCode: 'CC',
-    },
-  },
-  {
-    code: '6',
-    name: 'Davcode M"i"ller',
-    career: {
-      code: 'ICCI',
-      name: 'Ingeniería Civil en Computación e Informática',
-      subjectCode: 'CC',
-    },
-  },
-  {
-    code: '7',
-    name: 'Jessica Wilson',
-    career: {
-      code: 'II',
-      name: 'Ingeniería Industrial',
-      subjectCode: 'IN',
-    },
-  },
-  {
-    code: '8',
-    name: 'Daniel Moore',
-    career: {
-      code: 'ICCI',
-      name: 'Ingeniería Civil en Computación e Informática',
-      subjectCode: 'CC',
-    },
-  },
-  {
-    code: '9',
-    name: 'Emily Taylor',
-    career: {
-      code: 'IEE',
-      name: 'Ingeniería en Energía',
-      subjectCode: 'EN',
-    },
-  },
-  {
-    code: '10',
-    name: 'James Anderson',
-    career: {
-      code: 'IMT',
-      name: 'Ingeniería en Mecatrónica',
-      subjectCode: 'MT',
-    },
-  },
-];
-
-interface Subject {
-  code: string;
-  name: string;
-}
-
-const subjects: Subject[] = [
-  { code: 'CS101', name: 'Computer Science 101' },
-  { code: 'MA101', name: 'Mathematics 101' },
-  { code: 'EN101', name: 'English 101' },
-  { code: 'PH101', name: 'Physics 101' },
-];
-
-interface Laboratory {
-  code: string;
-  name: string;
-}
-
-const laboratories: Laboratory[] = [
-  { code: 'LAB1', name: 'Laboratorio 1' },
-  { code: 'LAB2', name: 'Laboratorio 2' },
-  { code: 'LAB3', name: 'Laboratorio 3' },
-  { code: 'LAB4', name: 'Laboratorio 4' },
-  { code: 'LAB5', name: 'Laboratorio 5' },
-  { code: 'LAB6', name: 'Laboratorio 6' },
-  { code: 'LAB7', name: 'Laboratorio 7' },
-  { code: 'LAB8', name: 'Laboratorio 8' },
-  { code: 'LAB9', name: 'Laboratorio 9' },
-  { code: 'LAB10', name: 'Laboratorio 10' },
-  { code: 'LAB11', name: 'Laboratorio 11' },
-  { code: 'LAB12', name: 'Laboratorio 12' },
-  { code: 'LAB13', name: 'Laboratorio 13' },
-  { code: 'LAB14', name: 'Laboratorio 14' },
-  { code: 'LAB15', name: 'Laboratorio 15' },
-  { code: 'LAB16', name: 'Laboratorio 16' },
-  { code: 'LAB17', name: 'Laboratorio 17' },
-  { code: 'LAB18', name: 'Laboratorio 18' },
-  { code: 'LAB19', name: 'Laboratorio 19' },
-  { code: 'LAB20', name: 'Laboratorio 20' },
-  { code: 'LAB21', name: 'Laboratorio 21' },
-  { code: 'LAB22', name: 'Laboratorio 22' },
-  { code: 'LAB23', name: 'Laboratorio 23' },
-  { code: 'LAB24', name: 'Laboratorio 24' },
-  { code: 'LAB25', name: 'Laboratorio 25' },
-  { code: 'LAB26', name: 'Laboratorio 26' },
-  { code: 'LAB27', name: 'Laboratorio 27' },
-  { code: 'LAB28', name: 'Laboratorio 28' },
-  { code: 'LAB29', name: 'Laboratorio 29' },
-  { code: 'LAB30', name: 'Laboratorio 30' },
-];
-
-// interface ID {
-//   uuid: `${string}-${string}-${string}-${string}-${string}`;
-// }
-
-interface DnDItem<T> {
-  [key: string]: {
-    type: string;
-    name: string;
-    items: T[];
-  };
-}
-
-const initialData: DnDItem<ScheduleDay | Subject | Teacher | Laboratory>[] = [
-  {
-    [crypto.randomUUID()]: {
-      items: schedule,
-      name: 'Horario',
-      type: 'schedule',
-    },
-  },
-  {
-    [crypto.randomUUID()]: {
-      items: subjects,
-      name: 'Asignaturas',
-      type: 'subjects',
-    },
-  },
-  {
-    [crypto.randomUUID()]: {
-      items: teachers,
-      name: 'Profesores',
-      type: 'teachers',
-    },
-  },
-  {
-    [crypto.randomUUID()]: {
-      items: laboratories,
-      name: 'Laboratorios',
-      type: 'laboratories',
-    },
-  },
-];
+import {
+  DnDItem,
+  getBlockIndexKey,
+  getItem,
+  getNewSchedule,
+  initialData,
+  isFilled,
+} from './functions';
 
 export default function ScheduleEdit() {
-  const [[schedule, subjects, teachers, laboratories], setItems] =
-    useState(initialData);
+  const [schedule, setSchedule] = useState<DnDItem<ScheduleDay>>(
+    initialData.schedule as DnDItem<ScheduleDay>,
+  );
+
+  const [subjects] = useState<DnDItem<Subject>>(
+    initialData.subjects as DnDItem<Subject>,
+  );
+
+  // TODO: Update Block times from subjects on set schedule
+
+  const teachers = initialData.teachers as DnDItem<Teacher>;
+
+  const laboratories = initialData.laboratories as DnDItem<Laboratory>;
 
   const onDragEnd = (result: DropResult) => {
-    //TODO: move item from one list to another
+    if (!result.destination) return;
+
+    const { source, draggableId } = result;
+
+    const dropSource: string = [subjects, teachers, laboratories]
+      .map(drop =>
+        Object.entries(drop).map(([uuid, { type }]) =>
+          uuid === source.droppableId ? type : null,
+        ),
+      )
+      .flat()
+      .reduce((acc, curr) => (curr ? curr : acc))!;
+
+    const { block, index, key } = getBlockIndexKey({
+      result,
+      schedule: schedule,
+    });
+
+    if (
+      isFilled({
+        schedule: [...schedule[key].items][index].blocks[Number(block) - 1],
+        type: dropSource,
+      })
+    )
+      return;
+
+    const drop: {
+      [key: string]: DnDItem<ScheduleDay | Subject | Teacher | Laboratory>;
+    } = {
+      schedule,
+      subjects,
+      teachers,
+      laboratories,
+    };
+
+    const [item] = getItem({
+      draggableId: draggableId,
+      drop: drop,
+      type: dropSource,
+    });
+    console.log(item);
+
+    const newSchedule = getNewSchedule({
+      prev: [...schedule[key].items],
+      block,
+      index,
+      item,
+      type: dropSource,
+    });
+
+    setSchedule({
+      ...schedule,
+      [key]: {
+        ...schedule[key],
+        items: newSchedule,
+      },
+    });
+    // setSchedule();
+
+    // A -> B
   };
+
+  useEffect(() => {
+    console.log(schedule);
+  }, [schedule]);
 
   return (
     <main className="schedule-edit-container">
@@ -233,7 +115,10 @@ export default function ScheduleEdit() {
             style={{ gridTemplateRows: '100%', overflow: 'hidden' }}
           >
             <ScheduleGrid key={uuid}>
-              <ScheduleColumn title="Hora">
+              <ScheduleColumn
+                title="Hora"
+                dataColor={'white'}
+              >
                 {blockHours.map((blockHour, blockIndex) => (
                   <ScheduleBlock
                     key={blockIndex}
@@ -250,50 +135,72 @@ export default function ScheduleEdit() {
                 <ScheduleColumn
                   key={day}
                   title={day}
+                  dataColor={'white'}
                 >
-                  {blocks.map(blockInfo => (
-                    <Droppable
-                      key={`${blockInfo.blockNumber}-${day}`}
-                      droppableId={`${blockInfo.blockNumber}-${day}`}
-                    >
-                      {(provided, _) => (
-                        <ScheduleBlock
-                          blockNumber={blockInfo.blockNumber}
-                          droppableProps={provided.droppableProps}
-                          reference={provided.innerRef}
-                        >
-                          <ScheduleInfo
-                            text={blockInfo.subject['code']}
-                            className={'code'}
-                          />
-                          {['name', 'teacher', 'place'].map(
-                            (className, index) => (
-                              <Draggable
-                                key={`${day}-${blockInfo.blockNumber}-${className}`}
-                                draggableId={`${day}-${blockInfo.blockNumber}-${className}`}
-                                index={index}
-                              >
-                                {(provided, _) => (
-                                  <ScheduleInfo
-                                    text={
-                                      blockInfo.subject[
-                                        className as keyof Subject
-                                      ]
-                                    }
-                                    className={className}
-                                    reference={provided.innerRef}
-                                    draggableProps={provided.draggableProps}
-                                    dragHandleProps={provided.dragHandleProps}
-                                  />
-                                )}
-                              </Draggable>
-                            ),
-                          )}
-                          {provided.placeholder}
-                        </ScheduleBlock>
-                      )}
-                    </Droppable>
-                  ))}
+                  {blocks.map(
+                    ({ blockNumber, subject, teacher, laboratory }) => (
+                      <Droppable
+                        key={`${blockNumber}-${day}`}
+                        droppableId={`${blockNumber}-${day}`}
+                      >
+                        {(provided, _) => (
+                          <ScheduleBlock
+                            blockNumber={blockNumber}
+                            droppableProps={provided.droppableProps}
+                            reference={provided.innerRef}
+                          >
+                            <ScheduleInfo
+                              text={subject['code']}
+                              className={'code'}
+                            />
+
+                            {['name', 'teacher', 'laboratory'].map(
+                              (key, index) => {
+                                let className = '';
+                                let text = '';
+                                switch (key) {
+                                  case 'name':
+                                    className = 'name';
+                                    text = subject.name;
+                                    break;
+                                  case 'teacher':
+                                    className = 'teacher';
+                                    text = teacher.name;
+                                    break;
+                                  case 'laboratory':
+                                    className = 'laboratory';
+                                    text = laboratory.name;
+                                    break;
+                                }
+                                return (
+                                  <Draggable
+                                    key={`${day}-${blockNumber}-${className}`}
+                                    draggableId={`${day}-${blockNumber}-${className}`}
+                                    index={index}
+                                    isDragDisabled={true}
+                                  >
+                                    {(provided, _) => (
+                                      <ScheduleInfo
+                                        text={text}
+                                        className={className}
+                                        reference={provided.innerRef}
+                                        draggableProps={provided.draggableProps}
+                                        dragHandleProps={
+                                          provided.dragHandleProps
+                                        }
+                                      />
+                                    )}
+                                  </Draggable>
+                                );
+                              },
+                            )}
+
+                            {provided.placeholder}
+                          </ScheduleBlock>
+                        )}
+                      </Droppable>
+                    ),
+                  )}
                 </ScheduleColumn>
               ))}
             </ScheduleGrid>

@@ -1,4 +1,4 @@
-import { DraggableProps } from 'src/utils/interfaces';
+import { DraggableProps } from 'src/utils/const';
 
 interface ScheduleInfoProps {
   // subject: Subject;
@@ -15,13 +15,13 @@ export default function ScheduleInfo({
   text,
 }: ScheduleInfoProps & DraggableProps) {
   return (
-    <div
+    <span
       ref={reference}
       className={`schedule-grid__block__info-${className}`}
       {...draggableProps}
       {...dragHandleProps}
     >
       {text}
-    </div>
+    </span>
   );
 }
