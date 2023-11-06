@@ -6,7 +6,10 @@ import {
 } from 'src/components';
 import { Card, CardContainer } from './components';
 import { blockHours } from '../Schedule';
-import { useEffect, useState } from 'react';
+import {
+  // useEffect,
+  useState,
+} from 'react';
 import {
   DragDropContext,
   Draggable,
@@ -22,20 +25,90 @@ import {
   isFilled,
 } from './functions';
 
+interface OccupiedBlocks {
+  day: string;
+  block: number;
+}
+
 export default function ScheduleEdit() {
   const [schedule, setSchedule] = useState<DnDItem<ScheduleDay>>(
     initialData.schedule as DnDItem<ScheduleDay>,
   );
-
-  const [subjects] = useState<DnDItem<Subject>>(
+  const [subjects, setSubjects] = useState<DnDItem<Subject>>(
     initialData.subjects as DnDItem<Subject>,
   );
-
-  // TODO: Update Block times from subjects on set schedule
-
   const teachers = initialData.teachers as DnDItem<Teacher>;
-
   const laboratories = initialData.laboratories as DnDItem<Laboratory>;
+  const [occupiedBlocks, _] = useState<OccupiedBlocks[]>([]);
+
+  //TODO: implement axios query to get all data
+
+  const deleteAssignment = ({
+    day,
+    block,
+    code,
+    type,
+  }: {
+    day: string;
+    block: number;
+    code: string;
+    type: string;
+  }) => {
+    const [{ key, item }] = Object.entries(schedule)
+      .map(([key, { items }]) => {
+        return {
+          key,
+          item: (items as ScheduleDay[]).find(({ dayName }) => dayName === day),
+        };
+      })
+      .flat();
+    if (!item) return;
+    switch (type) {
+      case 'subject':
+        item.blocks[block - 1].subject = {
+          code: '',
+          name: '',
+        };
+        // (Object.values(subjects) as Subject[]);
+        const [{ key, subject }] = Object.entries(subjects).map(
+          ([key, { items }]) => ({
+            key,
+            subject: (items as Subject[]).find(({ code: subjectCode }) => {
+              return subjectCode === code;
+            }),
+          }),
+        );
+        if (!subject) return;
+        subject.maxBlocks++;
+        setSubjects(prev => ({
+          ...prev,
+          [key]: {
+            ...prev[key as keyof typeof prev],
+            items: [...prev[key as keyof typeof prev].items],
+          },
+        }));
+        break;
+      case 'teacher':
+        item.blocks[block - 1].teacher = {
+          code: '',
+          name: '',
+        };
+        break;
+      case 'laboratory':
+        item.blocks[block - 1].laboratory = {
+          code: '',
+          name: '',
+        };
+        break;
+    }
+    setSchedule(prev => ({
+      ...schedule,
+      [key]: {
+        ...prev[key as keyof typeof prev],
+        items: [...prev[key as keyof typeof prev].items],
+      },
+    }));
+  };
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -78,7 +151,8 @@ export default function ScheduleEdit() {
       drop: drop,
       type: dropSource,
     });
-    console.log(item);
+
+    if (dropSource === 'subjects') (item as Subject).maxBlocks--;
 
     const newSchedule = getNewSchedule({
       prev: [...schedule[key].items],
@@ -95,14 +169,11 @@ export default function ScheduleEdit() {
         items: newSchedule,
       },
     });
-    // setSchedule();
-
-    // A -> B
   };
 
-  useEffect(() => {
-    console.log(schedule);
-  }, [schedule]);
+  // useEffect(() => {
+  //   console.log(schedule);
+  // }, [schedule]);
 
   return (
     <main className="schedule-edit-container">
@@ -133,7 +204,7 @@ export default function ScheduleEdit() {
               </ScheduleColumn>
               {(items as ScheduleDay[]).map(({ dayName: day, blocks }) => (
                 <ScheduleColumn
-                  key={day}
+                  key={crypto.randomUUID()}
                   title={day}
                   dataColor={'white'}
                 >
@@ -142,6 +213,11 @@ export default function ScheduleEdit() {
                       <Droppable
                         key={`${blockNumber}-${day}`}
                         droppableId={`${blockNumber}-${day}`}
+                        isDropDisabled={occupiedBlocks.some(
+                          ({ day: occupiedDay, block: occupiedBlock }) =>
+                            occupiedDay === day &&
+                            occupiedBlock === blockNumber,
+                        )}
                       >
                         {(provided, _) => (
                           <ScheduleBlock
@@ -158,24 +234,28 @@ export default function ScheduleEdit() {
                               (key, index) => {
                                 let className = '';
                                 let text = '';
+                                let code = '';
                                 switch (key) {
                                   case 'name':
                                     className = 'name';
                                     text = subject.name;
+                                    code = subject.code;
                                     break;
                                   case 'teacher':
                                     className = 'teacher';
                                     text = teacher.name;
+                                    code = teacher.code;
                                     break;
                                   case 'laboratory':
                                     className = 'laboratory';
                                     text = laboratory.name;
+                                    code = laboratory.code;
                                     break;
                                 }
                                 return (
                                   <Draggable
-                                    key={`${day}-${blockNumber}-${className}`}
-                                    draggableId={`${day}-${blockNumber}-${className}`}
+                                    key={`${day}-${blockNumber}-${className}-${code}`}
+                                    draggableId={`${day}-${blockNumber}-${className}-${code}`}
                                     index={index}
                                     isDragDisabled={true}
                                   >
@@ -187,6 +267,17 @@ export default function ScheduleEdit() {
                                         draggableProps={provided.draggableProps}
                                         dragHandleProps={
                                           provided.dragHandleProps
+                                        }
+                                        onClick={() =>
+                                          deleteAssignment({
+                                            block: blockNumber,
+                                            code: code,
+                                            day: day,
+                                            type: key.replace(
+                                              'name',
+                                              'subject',
+                                            ),
+                                          })
                                         }
                                       />
                                     )}
@@ -223,23 +314,34 @@ export default function ScheduleEdit() {
                   {type !== 'teachers' && (
                     <>
                       {(items as (Subject | Laboratory)[]).map(
-                        ({ code, name }, index) => (
-                          <Draggable
-                            draggableId={code}
-                            index={index}
-                            key={code}
-                          >
-                            {(provided, _) => (
-                              <Card
-                                code={code}
-                                name={name}
-                                reference={provided.innerRef}
-                                draggableProps={provided.draggableProps}
-                                dragHandleProps={provided.dragHandleProps}
-                              />
-                            )}
-                          </Draggable>
-                        ),
+                        (item, index) => {
+                          const { code, name } = item;
+                          let isDragDisabled = false;
+                          if ((item as Subject).maxBlocks !== undefined) {
+                            isDragDisabled = (item as Subject).maxBlocks === 0;
+                          }
+                          return (
+                            <Draggable
+                              draggableId={code}
+                              index={index}
+                              key={code}
+                              isDragDisabled={isDragDisabled}
+                            >
+                              {(provided, _) => (
+                                <Card
+                                  code={code}
+                                  name={name}
+                                  reference={provided.innerRef}
+                                  draggableProps={provided.draggableProps}
+                                  dragHandleProps={provided.dragHandleProps}
+                                  className={
+                                    isDragDisabled ? 'isDragDisabled' : ''
+                                  }
+                                />
+                              )}
+                            </Draggable>
+                          );
+                        },
                       )}
                     </>
                   )}

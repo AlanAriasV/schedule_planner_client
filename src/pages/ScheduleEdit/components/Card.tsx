@@ -4,6 +4,7 @@ interface CardProps {
   name: string;
   code: string;
   reference?: React.Ref<HTMLDivElement>;
+  className?: string;
 }
 
 export default function Card({
@@ -12,11 +13,12 @@ export default function Card({
   reference,
   dragHandleProps,
   draggableProps,
+  className,
 }: CardProps & DraggableProps) {
   return (
     <div
       ref={reference}
-      className="card"
+      className={`card ${className} `}
       {...draggableProps}
       {...dragHandleProps}
     >

@@ -1,16 +1,24 @@
-import { ScheduleGrid, ScheduleColumn, ScheduleBlock } from 'src/components';
-import ScheduleInfo from 'src/components/ScheduleGrid/ScheduleInfo';
-import { scheduleExample } from 'src/utils/dataTemp';
+import {
+  ScheduleGrid,
+  ScheduleColumn,
+  ScheduleBlock,
+  ScheduleInfo,
+} from 'src/components';
 
-export const blockHours = ['8:00 - 8:45', '8:45 - 9:30', '9:40 - 10:25'];
+import {
+  scheduleExample,
+  // TeacherAvailability,
+  blockHours,
+} from 'src/utils/dataTemp';
 
-export default function Schedule() {
+export default function ScheduleAvailability() {
+  console.log(blockHours);
   return (
     <main className="schedule-visualizer">
-      <h1 className="schedule-visualizer__title">Horario</h1>
+      <h1 className="schedule-visualizer__title">Horario de disponibilidad</h1>
       <div className="schedule-visualizer__container">
         <ScheduleGrid>
-          <ScheduleColumn title="Hora">
+          {/* <ScheduleColumn title="Hora">
             {blockHours.map((blockHour, blockIndex) => (
               <ScheduleBlock
                 key={blockIndex}
@@ -22,7 +30,7 @@ export default function Schedule() {
                 />
               </ScheduleBlock>
             ))}
-          </ScheduleColumn>
+          </ScheduleColumn> */}
           {scheduleExample.map(({ dayName: day, blocks }, dayIndex) => (
             <ScheduleColumn
               key={dayIndex}

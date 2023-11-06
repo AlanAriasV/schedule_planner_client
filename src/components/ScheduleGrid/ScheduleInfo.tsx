@@ -5,6 +5,7 @@ interface ScheduleInfoProps {
   className: string;
   reference?: React.Ref<HTMLSpanElement>;
   text: string;
+  onClick?: () => void;
 }
 
 export default function ScheduleInfo({
@@ -13,6 +14,7 @@ export default function ScheduleInfo({
   dragHandleProps,
   reference,
   text,
+  onClick,
 }: ScheduleInfoProps & DraggableProps) {
   return (
     <span
@@ -20,6 +22,7 @@ export default function ScheduleInfo({
       className={`schedule-grid__block__info-${className}`}
       {...draggableProps}
       {...dragHandleProps}
+      onClick={onClick}
     >
       {text}
     </span>

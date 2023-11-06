@@ -4,6 +4,7 @@
 @use 'scheduleEdit';
 @use 'scheduleGrid';
 @use 'scheduleManager';
+@use 'scheduleAvailability';
 @use 'cards';
 @use 'scrollbar';
 @use 'login';
@@ -75,4 +76,9 @@ p {
 }
 span {
   font-size: base.$text-md1;
+}
+
+.isDragDisabled {
+  opacity: 0.5;
+  pointer-events: none;
 }

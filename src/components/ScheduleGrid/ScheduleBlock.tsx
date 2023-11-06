@@ -5,10 +5,12 @@ interface ScheduleBlockProps {
   blockNumber: number;
   children: ReactNode;
   reference?: React.Ref<HTMLDivElement>;
+  className?: string;
 }
 
 export default function ScheduleBlock({
   blockNumber,
+  className,
   children,
   droppableProps,
   reference,
@@ -16,7 +18,7 @@ export default function ScheduleBlock({
   return (
     <div
       ref={reference}
-      className="schedule-grid__block"
+      className={`schedule-grid__block` + (className ? ` ${className}` : '')}
       {...droppableProps}
     >
       <span className="schedule-grid__block-number">{blockNumber}</span>

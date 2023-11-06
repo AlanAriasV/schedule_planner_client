@@ -1,7 +1,7 @@
 import { ScheduleGrid, ScheduleColumn, ScheduleBlock } from 'src/components';
 import ScheduleInfo from 'src/components/ScheduleGrid/ScheduleInfo';
 import { useEffect, useRef, useState } from 'react';
-import ScheduleSelect from './components/OptionsSelect';
+import { ScheduleSelect } from './components';
 import { AiFillEdit, AiOutlineEdit } from 'react-icons/ai';
 import autoAnimate from '@formkit/auto-animate';
 

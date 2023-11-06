@@ -10,8 +10,14 @@ import {
   DroppableProvidedProps,
 } from 'react-beautiful-dnd';
 import { Navigate, createBrowserRouter } from 'react-router-dom';
-import { Layout, Login, Schedule, ScheduleEdit } from 'src/pages';
-import ScheduleManager from 'src/pages/ScheduleManager';
+import {
+  Layout,
+  Login,
+  Schedule,
+  ScheduleAvailability,
+  ScheduleEdit,
+  ScheduleManager,
+} from 'src/pages';
 
 interface SideBarOption {
   name: string;
@@ -39,6 +45,12 @@ export const sideBarOptions: SideBarOption[] = [
     iconOutline: <AiOutlineSchedule className="icon" />,
     iconFill: <AiFillSchedule className="icon" />,
   },
+  {
+    name: 'Editar disponibilidad',
+    path: '/edit-availability',
+    iconOutline: <AiOutlineSchedule className="icon" />,
+    iconFill: <AiFillSchedule className="icon" />,
+  },
 ];
 export const router = createBrowserRouter(
   [
@@ -61,6 +73,10 @@ export const router = createBrowserRouter(
         {
           path: 'edit-schedule',
           element: <ScheduleEdit />,
+        },
+        {
+          path: 'edit-availability',
+          element: <ScheduleAvailability />,
         },
       ],
     },

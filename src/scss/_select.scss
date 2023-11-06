@@ -26,7 +26,32 @@
   align-items: center;
   gap: 10px;
 
+  &.help-indicator {
+    &:not(.react-select--is-disabled) {
+      border-radius: 3px;
+      animation: pulse 2s infinite;
+    }
+  }
+
   &__label {
     font-weight: bold;
+  }
+}
+
+.react-select--is-disabled {
+  .react-select__placeholder {
+    color: $color-grey !important;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(0, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
   }
 }
