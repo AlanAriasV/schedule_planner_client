@@ -4,6 +4,7 @@ import {
   AiOutlineHome,
   AiOutlineSchedule,
 } from 'react-icons/ai';
+import { IoMdSwap } from 'react-icons/io';
 import {
   DraggableProvidedDragHandleProps,
   DraggableProvidedDraggableProps,
@@ -18,6 +19,7 @@ import {
   ScheduleEdit,
   ScheduleManager,
 } from 'src/pages';
+import ScheduleTrade from 'src/pages/ScheduleTrade';
 
 interface SideBarOption {
   name: string;
@@ -51,6 +53,12 @@ export const sideBarOptions: SideBarOption[] = [
     iconOutline: <AiOutlineSchedule className="icon" />,
     iconFill: <AiFillSchedule className="icon" />,
   },
+  {
+    name: 'Intercambiar horario',
+    path: '/trade-schedule',
+    iconOutline: <IoMdSwap className="icon" />,
+    iconFill: <IoMdSwap className="icon" />,
+  },
 ];
 export const router = createBrowserRouter(
   [
@@ -77,6 +85,10 @@ export const router = createBrowserRouter(
         {
           path: 'edit-availability',
           element: <ScheduleAvailability />,
+        },
+        {
+          path: 'trade-schedule',
+          element: <ScheduleTrade />,
         },
       ],
     },

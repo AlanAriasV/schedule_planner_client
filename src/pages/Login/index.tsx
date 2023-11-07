@@ -3,6 +3,7 @@ import { GrFormViewHide, GrFormView } from 'react-icons/gr';
 import { useState } from 'react';
 import { RutFormat, formatRut } from '@fdograph/rut-utilities';
 import { toast } from 'react-toastify';
+import { login } from 'src/api';
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,12 +34,18 @@ function Login() {
   const HandleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const password = event.target.password.value;
+    const formData = new FormData(event.currentTarget);
+    const password = formData.get('password');
     if (!run || !password) {
-      toast.error('Asegurese de llenar todos los campos');
+      toast.error('Asegúrese de llenar todos los campos');
       return;
     }
-    toast.success(run + ' ' + password);
+    login({ run, password: password.toString() })
+      .then(res => {
+        console.log(res.data);
+        toast.success('Sesión iniciada');
+      })
+      .catch(err => toast.error(`${err.response.data.msg}`));
   };
 
   return (

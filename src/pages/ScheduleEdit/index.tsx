@@ -5,7 +5,6 @@ import {
   ScheduleInfo,
 } from 'src/components';
 import { Card, CardContainer } from './components';
-import { blockHours } from '../Schedule';
 import {
   // useEffect,
   useState,
@@ -24,6 +23,7 @@ import {
   initialData,
   isFilled,
 } from './functions';
+import { blockHours } from 'src/utils/dataTemp';
 
 interface OccupiedBlocks {
   day: string;
@@ -194,6 +194,7 @@ export default function ScheduleEdit() {
                   <ScheduleBlock
                     key={blockIndex}
                     blockNumber={blockIndex + 1}
+                    className="hour-block"
                   >
                     <ScheduleInfo
                       text={blockHour}

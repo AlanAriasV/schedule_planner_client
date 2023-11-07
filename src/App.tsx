@@ -7,7 +7,11 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
-      <ToastContainer />
+      <ToastContainer
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+        limit={3}
+      />
     </>
   );
 }

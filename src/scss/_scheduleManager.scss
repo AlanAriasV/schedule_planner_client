@@ -24,62 +24,8 @@
 .schedule-manager__container {
   position: relative;
   button {
-    cursor: pointer;
     position: absolute;
     bottom: 30px;
     right: 30px;
-    opacity: 0.5;
-    transition: all 0.25s ease-in-out;
-    padding: 5px;
-    font-size: 30px;
-    display: flex;
-    border-radius: 100px;
-    overflow: hidden;
-    align-items: center;
-    background-color: $color-primary;
-    color: white;
-    width: 50px;
-    height: 50px;
-    gap: 5px;
-    border-style: none;
-
-    .icon-container {
-      position: relative;
-      height: 100%;
-      aspect-ratio: 1;
-
-      .icon {
-        position: absolute;
-        top: 0;
-        left: 0;
-        transition: all 0.25s ease-in-out;
-        padding: 2px;
-        &:last-child {
-          opacity: 0;
-          visibility: hidden;
-        }
-      }
-    }
-
-    span {
-      font-size: 1.4rem;
-    }
-
-    &:hover {
-      opacity: 1;
-      width: 120px;
-      .icon-container {
-        .icon {
-          &:first-child {
-            opacity: 0;
-            visibility: hidden;
-          }
-          &:last-child {
-            opacity: 1;
-            visibility: visible;
-          }
-        }
-      }
-    }
   }
 }

@@ -151,11 +151,10 @@ export const subjects = [
 
 export const scheduleExample: ScheduleDay[] = days.map(day => ({
   dayName: day,
-  blocks: Array.from({ length: 14 }, (_, i) => {
-    const subject: Subject = {
+  blocks: Array.from({ length: 16 }, (_, i) => {
+    const subject: Omit<Subject, 'maxBlocks'> = {
       code: '',
       name: '',
-      maxBlocks: Math.floor(Math.random() * 8) + 1,
     };
     const teacher: Omit<Teacher, 'career'> = {
       code: '',
@@ -166,7 +165,7 @@ export const scheduleExample: ScheduleDay[] = days.map(day => ({
       name: '',
     };
 
-    if (Math.random() > 0.5) {
+    if ((i < 6 || i > 7) && Math.random() > 0.5) {
       const rn = Math.floor(Math.random() * subjects.length);
       Object.assign(subject, {
         code: subjects[rn].code,
@@ -196,16 +195,29 @@ export const ScheduleOptions = [
   },
 ];
 
-export const TeacherAvailability = days.map(day => {
-  const blocks = Array.from({ length: 14 }, (_, i) => ({
+export const TeacherAvailability = days.map(dayName => {
+  const blocks = Array.from({ length: 16 }, (_, i) => ({
     blockNumber: i + 1,
-    availability: Math.random() > 0.5 ? true : false,
+    availability: Math.random() > 0.5 && (i < 6 || i > 7) ? false : true,
   }));
-  return { day, blocks };
+  return { dayName, blocks };
 });
 
-export const blockHours = Array.from({ length: 27 }, (_, i) => {
-  const hour = Math.floor(8 + i / 2);
-  const minutes = i % 2 === 0 ? '00' : '30';
-  return `${hour}:${minutes}`;
-});
+export const blockHours = [
+  '8:00 - 8:45',
+  '8:45 - 9:30',
+  '9:40 - 10:25',
+  '10:25 - 11:10',
+  '11:20 - 12:05',
+  '12:05 - 12:50',
+  '13:00 - 13:45',
+  '13:45 - 14:30',
+  '14:45 - 15:25',
+  '15:30 - 16:15',
+  '16:20 - 17:05',
+  '17:05 - 17:50',
+  '17:55 - 18:40',
+  '18:40 - 19:25',
+  '19:30 - 20:15',
+  '20:15 - 21:00',
+];

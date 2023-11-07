@@ -19,12 +19,25 @@
   height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
-  grid-template-columns: repeat(6, calc(100% / 6));
+  grid-template-columns: 150px repeat(5, calc((100% - 150px) / 5));
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
   border-radius: 0.7rem;
 
   &__column {
     padding: 10px;
+
+    &:first-child {
+      // .schedule-grid__block{
+      //   background-color: $color-grey;
+      // }
+      .schedule-grid__column-name {
+        background-color: $color-matching-gradient-3;
+
+        &:after {
+          background-color: $color-matching-gradient-3;
+        }
+      }
+    }
 
     &:nth-child(even) {
       border-left: 1px solid $color-grey;
@@ -41,31 +54,45 @@
       top: 0;
       font-weight: bold;
       margin-bottom: 10px;
-      background-color: $color-dark;
+      background-color: $color-matching-gradient-2;
       color: $color-white;
       border-radius: 0.5rem;
       box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
       padding: 5px;
+      z-index: 1;
     }
 
     &-blocks {
       display: grid;
       grid-auto-columns: 100%;
-      grid-template-rows: repeat(14, 150px);
+      grid-template-rows: repeat(6, 150px) repeat(2, 60px) repeat(8, 150px);
       gap: 10px;
     }
   }
 
   &__block {
+    position: relative;
     display: grid;
     border: 1px solid #ddd;
     padding: 5px;
     grid-template-columns: repeat(2, 50%);
+    z-index: 0;
 
     grid-template-areas:
       'number code'
       'subject subject'
       'teacher place';
+
+    &:nth-child(7),
+    &:nth-child(8) {
+      &:not(.hour-block) {
+        background-color: $color-grey;
+      }
+      .schedule-grid__block__info-name {
+        grid-area: none;
+        position: absolute;
+      }
+    }
 
     &-number {
       grid-area: number;
@@ -101,7 +128,7 @@
 .scrolling {
   .schedule-grid__column-name {
     border-radius: 0 0 0.5rem 0.5rem;
-    z-index: 0;
+    z-index: 1;
     &:after {
       z-index: -1;
       content: '';
@@ -114,7 +141,7 @@
       top: 0;
       text-align: center;
       height: 10px;
-      background-color: $color-dark;
+      background-color: $color-matching-gradient-2;
       width: 110%;
       transform: translateX(-5%);
     }

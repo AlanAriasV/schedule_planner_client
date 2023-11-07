@@ -1,8 +1,6 @@
 import { ScheduleGrid, ScheduleColumn, ScheduleBlock } from 'src/components';
 import ScheduleInfo from 'src/components/ScheduleGrid/ScheduleInfo';
-import { scheduleExample } from 'src/utils/dataTemp';
-
-export const blockHours = ['8:00 - 8:45', '8:45 - 9:30', '9:40 - 10:25'];
+import { scheduleExample, blockHours } from 'src/utils/dataTemp';
 
 export default function Schedule() {
   return (
@@ -15,6 +13,7 @@ export default function Schedule() {
               <ScheduleBlock
                 key={blockIndex}
                 blockNumber={blockIndex + 1}
+                className="hour-block"
               >
                 <ScheduleInfo
                   text={blockHour}

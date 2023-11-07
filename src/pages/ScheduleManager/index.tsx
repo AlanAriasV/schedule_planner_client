@@ -2,20 +2,25 @@ import { ScheduleGrid, ScheduleColumn, ScheduleBlock } from 'src/components';
 import ScheduleInfo from 'src/components/ScheduleGrid/ScheduleInfo';
 import { useEffect, useRef, useState } from 'react';
 import { ScheduleSelect } from './components';
-import { AiFillEdit, AiOutlineEdit } from 'react-icons/ai';
 import autoAnimate from '@formkit/auto-animate';
-
-export const blockHours = ['8:00 - 8:45', '8:45 - 9:30', '9:40 - 10:25'];
+import { blockHours } from 'src/utils/dataTemp';
+import { EditButton } from 'src/components/EditButton';
+import { useNavigate } from 'react-router-dom';
 
 export default function ScheduleManager() {
   const [schedule, setSchedule] = useState<ScheduleDay[] | undefined>(
     undefined,
   );
   const parent = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     parent.current && autoAnimate(parent.current, { duration: 250 });
   }, [parent]);
+
+  const handleEditBtn = () => {
+    navigate('/edit-schedule');
+  };
 
   return (
     <main className="schedule-manager">
@@ -35,6 +40,7 @@ export default function ScheduleManager() {
                   <ScheduleBlock
                     key={blockIndex}
                     blockNumber={blockIndex + 1}
+                    className="hour-block"
                   >
                     <ScheduleInfo
                       text={blockHour}
@@ -80,13 +86,10 @@ export default function ScheduleManager() {
                 </ScheduleColumn>
               ))}
             </ScheduleGrid>
-            <button>
-              <div className="icon-container">
-                <AiOutlineEdit className="icon" />
-                <AiFillEdit className="icon" />
-              </div>
-              <span>Editar</span>
-            </button>
+            <EditButton
+              text={'Editar'}
+              onClick={handleEditBtn}
+            />
           </>
         )}
       </div>

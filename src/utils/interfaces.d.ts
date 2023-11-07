@@ -18,6 +18,7 @@ interface Laboratory {
   code: string;
   name: string;
 }
+
 interface ScheduleBlock {
   blockNumber: number;
   subject: Omit<Subject, 'maxBlocks'>;
@@ -34,4 +35,12 @@ interface BlockHours {
   blockNumber: number;
   start: string;
   end: string;
+}
+
+interface availableBlocks {
+  dayName: string;
+  blocks: {
+    blockNumber: number;
+    availability: boolean;
+  }[];
 }
