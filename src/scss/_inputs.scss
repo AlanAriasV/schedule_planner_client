@@ -72,3 +72,29 @@ input[type='number'] {
     border-bottom: 2px solid $color-purple;
   }
 }
+
+.btn {
+  background-color: $color-primary;
+  border: none;
+  border-radius: 5px;
+  color: $color-white;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+  outline: none;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: $color-matching-gradient-2;
+  }
+
+  &:disabled {
+    background-color: $color-dark-grey;
+    cursor: not-allowed;
+  }
+}

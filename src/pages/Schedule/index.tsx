@@ -6,7 +6,7 @@ export default function Schedule() {
   return (
     <main className="schedule-visualizer">
       <h1 className="schedule-visualizer__title">Horario</h1>
-      <div className="schedule-visualizer__container">
+      <div className="schedule-grid__container">
         <ScheduleGrid>
           <ScheduleColumn title="Hora">
             {blockHours.map((blockHour, blockIndex) => (

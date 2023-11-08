@@ -4,6 +4,7 @@
 @use 'scheduleGrid';
 @use 'scheduleManager';
 @use 'scheduleAvailability';
+@use 'scheduleTrade';
 @use 'cards';
 @use 'scrollbar';
 @use 'login';
@@ -58,6 +59,7 @@ h2 {
 
 h3 {
   font-size: $text-lg1;
+  color: $color-primary;
 }
 
 h4 {
@@ -83,4 +85,23 @@ span {
 .isDragDisabled {
   opacity: 0.5;
   pointer-events: none;
+}
+
+.loader {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+main {
+  grid-area: content;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 10px;
+
+  .schedule-grid__container {
+    flex: 1;
+    height: 0;
+  }
 }

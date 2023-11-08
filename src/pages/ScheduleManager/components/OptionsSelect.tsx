@@ -1,6 +1,12 @@
 import Select from 'react-select';
 import { Dispatch, useEffect, useState } from 'react';
-import { scheduleExample, ScheduleOptions } from 'src/utils/dataTemp';
+import { getCareers, getSemesters } from 'src/api';
+import { getPlans } from 'src/api/';
+
+interface IOption {
+  value: string;
+  label: string;
+}
 
 export default function ScheduleSelect({
   setSchedule,
@@ -13,40 +19,57 @@ export default function ScheduleSelect({
     semester: '',
   });
 
-  const careerOptions = ScheduleOptions.map(({ name, code }) => ({
-    label: name,
-    value: code,
-  }));
-
-  const planOptions =
-    ScheduleOptions.find(option => option.code === career)?.plan.map(
-      ({ version, semesters }) => ({
-        label: `Plan ${version}`,
-        value: version,
-        semesters,
-      }),
-    ) ?? [];
-
-  const semestersOptions = Array.from(
-    {
-      length:
-        planOptions.find(option => option.value === +plan)?.semesters ?? 0,
-    },
-    (_, i) => ({
-      label: `Semestre ${i + 1}`,
-      value: i + 1,
-    }),
-  );
-
-  useEffect(() => {
-    if (career && plan && semester) {
-      setSchedule(scheduleExample);
-    }
-  }, [career, plan, semester, setSchedule]);
+  const [careerOptions, setCareerOptions] = useState<IOption[]>([]);
+  const [planOptions, setPlanOptions] = useState<IOption[]>([]);
+  const [semestersOptions, setSemestersOptions] = useState<IOption[]>([]);
 
   const addHelpIndicatorClass = (element: string) => {
     return element ? '' : 'help-indicator';
   };
+
+  useEffect(() => {
+    if (career && plan && semester) {
+      //TODO: get schedule from api
+      setSchedule([]);
+    }
+  }, [career, plan, semester, setSchedule]);
+
+  useEffect(() => {
+    getCareers().then(res => {
+      setCareerOptions(
+        res.data.careers.map(({ name, code }) => ({
+          label: name,
+          value: code,
+        })),
+      );
+    });
+  }, []);
+
+  useEffect(() => {
+    if (career) {
+      getPlans({ career_code: career }).then(res => {
+        setPlanOptions(
+          res.data.years.map(({ year }) => ({
+            label: `Plan ${year}`,
+            value: `${year}`,
+          })),
+        );
+      });
+    }
+  }, [career]);
+
+  useEffect(() => {
+    if (plan) {
+      getSemesters({ plan_code: `${career}_${plan}` }).then(res => {
+        setSemestersOptions(
+          res.data.semesters.map(({ number }) => ({
+            label: `Semestre ${number}`,
+            value: `${number}`,
+          })),
+        );
+      });
+    }
+  }, [plan]);
 
   return (
     <>

@@ -4,3 +4,6 @@ export { default as ScheduleGrid } from './ScheduleGrid/ScheduleGrid';
 export { default as ScheduleColumn } from './ScheduleGrid/ScheduleColumn';
 export { default as ScheduleBlock } from './ScheduleGrid/ScheduleBlock';
 export { default as ScheduleInfo } from './ScheduleGrid/ScheduleInfo';
+export { default as CardContainer } from './CardContainer';
+export { default as EditButton } from './EditButton';
+export { default as ProtectedRoute } from './ProtectedRoute';

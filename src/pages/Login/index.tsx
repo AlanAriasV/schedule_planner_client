@@ -1,11 +1,15 @@
 import { BiSolidUserCircle } from 'react-icons/bi';
 import { GrFormViewHide, GrFormView } from 'react-icons/gr';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RutFormat, formatRut } from '@fdograph/rut-utilities';
 import { toast } from 'react-toastify';
-import { login } from 'src/api';
+import { autoLogin, login } from 'src/api';
+import useUserStore from 'src/store/useUserStore';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const { run: userRun, setUser } = useUserStore(state => state);
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const [run, setRun] = useState('');
@@ -42,11 +46,30 @@ function Login() {
     }
     login({ run, password: password.toString() })
       .then(res => {
-        console.log(res.data);
+        const { token, ...user } = res.data;
+        localStorage.setItem('token', token);
         toast.success('Sesión iniciada');
+        setUser(user);
       })
       .catch(err => toast.error(`${err.response.data.msg}`));
   };
+
+  useEffect(() => {
+    if (userRun) {
+      navigate('/home');
+    } else {
+      autoLogin()
+        .then(res => {
+          const { iat, exp, ...user } = res.data;
+          console.log(user);
+          setUser(user);
+          navigate('/home');
+        })
+        .catch(err => {
+          console.log(err.response.data);
+        });
+    }
+  }, [userRun]);
 
   return (
     <main id="login-page">

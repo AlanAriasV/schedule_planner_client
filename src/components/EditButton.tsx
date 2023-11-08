@@ -6,7 +6,11 @@ interface editButtonProps {
   onClick: () => void;
 }
 
-export function EditButton({ text, className, onClick }: editButtonProps) {
+export default function EditButton({
+  text,
+  className,
+  onClick,
+}: editButtonProps) {
   return (
     <button
       onClick={onClick}

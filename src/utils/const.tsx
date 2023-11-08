@@ -20,6 +20,7 @@ import {
   ScheduleManager,
 } from 'src/pages';
 import ScheduleTrade from 'src/pages/ScheduleTrade';
+import { ProtectedRoute } from 'src/components';
 
 interface SideBarOption {
   name: string;
@@ -43,7 +44,7 @@ export const sideBarOptions: SideBarOption[] = [
   },
   {
     name: 'Edit Schedule',
-    path: '/edit-schedule',
+    path: '/edit-schedule/ICCI/2019/5',
     iconOutline: <AiOutlineSchedule className="icon" />,
     iconFill: <AiFillSchedule className="icon" />,
   },
@@ -64,7 +65,11 @@ export const router = createBrowserRouter(
   [
     {
       path: '/',
-      element: <Layout />,
+      element: (
+        <ProtectedRoute>
+          <Layout />
+        </ProtectedRoute>
+      ),
       children: [
         {
           index: true,
@@ -79,7 +84,7 @@ export const router = createBrowserRouter(
           element: <ScheduleManager />,
         },
         {
-          path: 'edit-schedule',
+          path: 'edit-schedule/:career/:plan/:semester',
           element: <ScheduleEdit />,
         },
         {

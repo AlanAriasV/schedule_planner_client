@@ -6,7 +6,7 @@ import {
   ScheduleBlock,
   ScheduleInfo,
 } from 'src/components';
-import { EditButton } from 'src/components/EditButton';
+import { EditButton } from 'src/components/';
 
 import { TeacherAvailability, blockHours } from 'src/utils/dataTemp';
 
@@ -62,7 +62,7 @@ export default function ScheduleAvailability() {
           onClick={handleEditBtn}
         />
       </div>
-      <div className="schedule-availability__container">
+      <div className="schedule-grid__container">
         <ScheduleGrid>
           <ScheduleColumn title="Hora">
             {blockHours.map((blockHour, blockIndex) => (

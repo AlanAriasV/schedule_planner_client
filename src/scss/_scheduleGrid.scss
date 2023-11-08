@@ -1,18 +1,4 @@
 @import 'base';
-
-.schedule-visualizer {
-  grid-area: content;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  gap: 10px;
-
-  &__container {
-    height: 0;
-    flex: 1;
-  }
-}
-
 .schedule-grid {
   position: relative;
   display: grid;
@@ -142,32 +128,33 @@
       text-align: center;
       height: 10px;
       background-color: $color-matching-gradient-2;
-      width: 110%;
-      transform: translateX(-5%);
+      width: 105%;
+      transform: translateX(-2.5%);
     }
 
     h4 {
       &:before {
         content: '';
+        display: block;
         position: absolute;
-        left: -15px;
+        right: 100%;
         top: 0;
-        border: 5px solid $color-light-grey;
+        // border: 5px solid $color-light-grey;
         border-top-right-radius: 7px;
-        width: 5px;
-        height: 5px;
+        width: 10px;
+        height: 10px;
         background-color: $color-light-grey;
       }
 
       &:after {
         content: '';
+        display: block;
         position: absolute;
-        right: -15px;
+        left: 100%;
         top: 0;
-        border: 5px solid $color-light-grey;
         border-top-left-radius: 7px;
-        width: 5px;
-        height: 5px;
+        width: 10px;
+        height: 10px;
         background-color: $color-light-grey;
       }
 

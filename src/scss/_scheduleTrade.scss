@@ -1,0 +1,179 @@
+@import 'base';
+.schedule-trade {
+  &__container {
+    display: grid;
+    grid-template-columns: 1fr 5px 1fr;
+    grid-template-rows: 100%;
+    height: 0;
+    flex: 1;
+    margin-top: 10px;
+    align-items: center;
+    justify-content: center;
+
+    .section-card-container {
+      .card-container {
+        grid-auto-rows: 0;
+        grid-template-rows: 100%;
+        overflow: hidden;
+      }
+    }
+
+    .schedule-grid__column-blocks {
+      grid-template-rows: repeat(6, 100px) repeat(2, 50px) repeat(8, 100px);
+    }
+
+    .schedule-grid__block {
+      &.selectable {
+        cursor: pointer;
+      }
+
+      &:not(.selectable) {
+        pointer-events: none;
+      }
+
+      &.selected {
+        animation: selected 1s infinite;
+        color: $color-white;
+      }
+    }
+  }
+}
+
+.middle-section__container {
+  z-index: 1;
+  font-size: 1.2rem;
+  position: relative;
+  height: 100%;
+
+  .trade-icon__container {
+    color: $color-matching-gradient-2;
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 2px 5px;
+    display: flex;
+    flex-direction: column;
+    background-color: $color-matching-gradient-2;
+    color: white;
+    border-radius: 0.5rem;
+    :nth-child(2) {
+      transform: rotate(180deg);
+    }
+  }
+
+  .options__container {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    background-color: $color-primary;
+    opacity: 0.8;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: default;
+    gap: 5px;
+    transition: all 0.2s ease-in-out;
+    padding: 10px 10px;
+
+    span {
+      color: $color-white;
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+
+    .btn {
+      background-color: $color-matching-gradient-3;
+    }
+
+    .paginator__container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      span {
+        width: 15px;
+        text-align: center;
+      }
+      .paginator__button {
+        display: flex;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        outline: none;
+        font-size: 1.2rem;
+        margin: 0 10px;
+        color: $color-white;
+
+        .visible-hover {
+          display: none;
+        }
+
+        &:disabled {
+          cursor: default;
+          opacity: 0.2;
+        }
+
+        &:not(:disabled) {
+          &:hover {
+            .hidden-hover {
+              display: none;
+            }
+
+            .visible-hover {
+              display: flex;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.schedule-trade__select-container {
+  display: flex;
+  flex-direction: column;
+
+  span {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    font-size: 0.9rem;
+    background-color: $color-matching-gradient-2;
+    color: $color-white;
+    width: max-content;
+    padding: 5px 3px;
+    margin-bottom: 0;
+  }
+
+  .select-container {
+    flex: 0;
+    width: 40%;
+  }
+
+  .react-select__control {
+    border-top-left-radius: 0;
+  }
+}
+
+.react-select__indicator-separator {
+  display: none;
+}
+
+@keyframes selected {
+  0% {
+    box-shadow: 0 0 1px 2px rgba($color-primary, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 1px 2px rgba($color-primary, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 1px 2px rgba($color-primary, 0.7);
+  }
+}

@@ -149,40 +149,44 @@ export const subjects = [
   },
 ];
 
-export const scheduleExample: ScheduleDay[] = days.map(day => ({
-  dayName: day,
-  blocks: Array.from({ length: 16 }, (_, i) => {
-    const subject: Omit<Subject, 'maxBlocks'> = {
-      code: '',
-      name: '',
-    };
-    const teacher: Omit<Teacher, 'career'> = {
-      code: '',
-      name: '',
-    };
-    const laboratory: Laboratory = {
-      code: '',
-      name: '',
-    };
+export function generateRandomSchedule() {
+  return days.map(day => ({
+    dayName: day,
+    blocks: Array.from({ length: 16 }, (_, i) => {
+      const subject: Omit<Subject, 'maxBlocks'> = {
+        code: '',
+        name: '',
+      };
+      const teacher: Omit<Teacher, 'career'> = {
+        code: '',
+        name: '',
+      };
+      const laboratory: Laboratory = {
+        code: '',
+        name: '',
+      };
 
-    if ((i < 6 || i > 7) && Math.random() > 0.5) {
-      const rn = Math.floor(Math.random() * subjects.length);
-      Object.assign(subject, {
-        code: subjects[rn].code,
-        name: subjects[rn].name,
-      });
-      Object.assign(teacher, { ...teachers[rn] });
-      Object.assign(laboratory, { ...laboratories[rn] });
-    }
+      if ((i < 6 || i > 7) && Math.random() > 0.5) {
+        const rn = Math.floor(Math.random() * subjects.length);
+        Object.assign(subject, {
+          code: subjects[rn].code,
+          name: subjects[rn].name,
+        });
+        Object.assign(teacher, { ...teachers[rn] });
+        Object.assign(laboratory, { ...laboratories[rn] });
+      }
 
-    return {
-      blockNumber: i + 1,
-      subject,
-      teacher,
-      laboratory,
-    };
-  }),
-}));
+      return {
+        blockNumber: i + 1,
+        subject,
+        teacher,
+        laboratory,
+      };
+    }),
+  }));
+}
+
+export const scheduleExample: ScheduleDay[] = generateRandomSchedule();
 
 export const ScheduleOptions = [
   {
@@ -202,6 +206,13 @@ export const TeacherAvailability = days.map(dayName => {
   }));
   return { dayName, blocks };
 });
+
+export const enrolledSubjectsExample = [
+  { code: 'CS101', name: 'Computer Science 101' },
+  { code: 'MA101', name: 'Mathematics 101' },
+  { code: 'EN101', name: 'English 101' },
+  { code: 'PH101', name: 'Physics 101' },
+];
 
 export const blockHours = [
   '8:00 - 8:45',
