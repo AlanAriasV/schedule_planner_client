@@ -24,7 +24,7 @@ import {
   schedulesAlternatives,
 } from 'src/utils/dataTemp';
 import { toast } from 'react-toastify';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function ScheduleTrade() {
   const [selectedSubject, setSelectedSubject] = useState('');
@@ -32,7 +32,8 @@ export default function ScheduleTrade() {
     ScheduleDay[] | undefined
   >();
   const [selectedPage, setSelectedPage] = useState(0);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { subject } = useParams();
+  const navigate = useNavigate();
 
   let blockConflicts = 0;
 
@@ -46,11 +47,9 @@ export default function ScheduleTrade() {
 
   const handleBlockClick = (subjectCode: string) => {
     if (!selectedSubject) {
-      setSelectedSubject(subjectCode);
-      setSearchParams({ subject: subjectCode });
+      navigate(`/trade-schedule/${subjectCode}`);
     } else if (selectedSubject === subjectCode) {
-      setSelectedSubject('');
-      setSearchParams({ subject: '' });
+      navigate(`/trade-schedule`);
       schedule1Ref.current?.scrollTo({ top: 0, behavior: 'smooth' });
     }
     setSelectedPage(0);
@@ -117,10 +116,12 @@ export default function ScheduleTrade() {
   }, [selectedPage]);
 
   useEffect(() => {
-    if (searchParams.get('subject')) {
-      setSelectedSubject(searchParams.get('subject') ?? '');
+    if (subject) {
+      setSelectedSubject(subject);
+    } else {
+      setSelectedSubject('');
     }
-  }, [searchParams]);
+  }, [subject]);
 
   return (
     <main className="schedule-trade">
@@ -136,7 +137,9 @@ export default function ScheduleTrade() {
               null
             }
             placeholder={'Selecciona una asignatura'}
-            onChange={option => setSelectedSubject(option?.value ?? '')}
+            onChange={option =>
+              navigate(`/trade-schedule/${option?.value ?? ''}`)
+            }
           />
         </div>
         <div className="schedule-trade__legend">

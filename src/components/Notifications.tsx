@@ -11,7 +11,7 @@ export default function Notifications() {
 
   const handleGoBtn = () => {
     setIsClosing(true);
-    navigate('/trade-schedule/?subject=EN101');
+    navigate('/trade-schedule/EN101');
   };
 
   return (
