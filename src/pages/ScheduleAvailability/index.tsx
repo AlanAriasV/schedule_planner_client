@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AiFillEdit, AiOutlineEdit } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import {
   ScheduleGrid,
@@ -6,7 +7,7 @@ import {
   ScheduleBlock,
   ScheduleInfo,
 } from 'src/components';
-import { EditButton } from 'src/components/';
+import ExpandButton from 'src/components/ExpandButton';
 
 import { TeacherAvailability, blockHours } from 'src/utils/dataTemp';
 
@@ -56,10 +57,12 @@ export default function ScheduleAvailability() {
         <h1 className="schedule-availability__title">
           Horario de disponibilidad
         </h1>
-        <EditButton
+        <ExpandButton
           text={editMode ? 'Editando' : 'Editar'}
           className={editMode ? 'edit--active' : ''}
           onClick={handleEditBtn}
+          fillIcon={<AiFillEdit />}
+          outlineIcon={<AiOutlineEdit />}
         />
       </div>
       <div className="schedule-grid__container">

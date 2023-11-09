@@ -24,6 +24,7 @@ import {
   schedulesAlternatives,
 } from 'src/utils/dataTemp';
 import { toast } from 'react-toastify';
+import { useSearchParams } from 'react-router-dom';
 
 export default function ScheduleTrade() {
   const [selectedSubject, setSelectedSubject] = useState('');
@@ -31,6 +32,7 @@ export default function ScheduleTrade() {
     ScheduleDay[] | undefined
   >();
   const [selectedPage, setSelectedPage] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   let blockConflicts = 0;
 
@@ -45,8 +47,10 @@ export default function ScheduleTrade() {
   const handleBlockClick = (subjectCode: string) => {
     if (!selectedSubject) {
       setSelectedSubject(subjectCode);
+      setSearchParams({ subject: subjectCode });
     } else if (selectedSubject === subjectCode) {
       setSelectedSubject('');
+      setSearchParams({ subject: '' });
       schedule1Ref.current?.scrollTo({ top: 0, behavior: 'smooth' });
     }
     setSelectedPage(0);
@@ -111,6 +115,12 @@ export default function ScheduleTrade() {
   useEffect(() => {
     setSelectedSchedule(schedulesAlternatives[selectedPage]);
   }, [selectedPage]);
+
+  useEffect(() => {
+    if (searchParams.get('subject')) {
+      setSelectedSubject(searchParams.get('subject') ?? '');
+    }
+  }, [searchParams]);
 
   return (
     <main className="schedule-trade">

@@ -1,6 +1,6 @@
 @import 'base';
 
-.edit-btn {
+.expand-btn {
   cursor: pointer;
   opacity: 0.5;
   transition: all 0.25s ease-in-out;
@@ -23,6 +23,9 @@
     aspect-ratio: 1;
 
     .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       position: absolute;
       top: 0;
       left: 0;

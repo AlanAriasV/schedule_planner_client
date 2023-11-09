@@ -92,6 +92,10 @@ export const router = createBrowserRouter(
           element: <ScheduleAvailability />,
         },
         {
+          path: 'trade-schedule/:subject',
+          element: <ScheduleTrade />,
+        },
+        {
           path: 'trade-schedule',
           element: <ScheduleTrade />,
         },

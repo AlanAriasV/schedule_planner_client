@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { ScheduleSelect } from './components';
 import autoAnimate from '@formkit/auto-animate';
 import { blockHours } from 'src/utils/dataTemp';
-import { EditButton } from 'src/components/';
 import { useScheduleStore } from 'src/store';
+import ExpandButton from 'src/components/ExpandButton';
+import { AiFillEdit, AiOutlineEdit } from 'react-icons/ai';
 
 export default function ScheduleManager() {
   const { days: schedule } = useScheduleStore(state => state);
@@ -107,9 +108,11 @@ export default function ScheduleManager() {
                     </ScheduleColumn>
                   ))}
 
-                  <EditButton
+                  <ExpandButton
                     text={'Editar'}
                     onClick={handleEditBtn}
+                    fillIcon={<AiFillEdit />}
+                    outlineIcon={<AiOutlineEdit />}
                   />
                 </>
               )}
