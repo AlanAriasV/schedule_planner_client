@@ -1,27 +1,37 @@
 import Select from 'react-select';
 import { Dispatch, useEffect, useState } from 'react';
-import { getCareers, getSemesters } from 'src/api';
-import { getPlans } from 'src/api/';
+import { CareerApi, SemesterApi } from 'src/api';
+import PlanApi from 'src/api/services/planApi';
+import ScheduleApi from 'src/api/services/scheduleApi';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useScheduleStore } from 'src/store';
 
-interface IOption {
+type Option = {
   value: string;
   label: string;
-}
+};
 
 export default function ScheduleSelect({
-  setSchedule,
+  // setSchedule,
+  setHandleGenerateBtn,
+  setHandleEditBtn,
 }: {
-  setSchedule: Dispatch<ScheduleDay[]>;
+  // setSchedule: Dispatch<ScheduleDay[]>;
+  setHandleGenerateBtn: Dispatch<() => void>;
+  setHandleEditBtn: Dispatch<() => void>;
 }) {
+  const { setSchedule } = useScheduleStore(state => state);
   const [{ career, plan, semester }, setSelectedOption] = useState({
     career: '',
     plan: '',
     semester: '',
   });
+  const [careerOptions, setCareerOptions] = useState<Option[]>([]);
+  const [planOptions, setPlanOptions] = useState<Option[]>([]);
+  const [semestersOptions, setSemestersOptions] = useState<Option[]>([]);
 
-  const [careerOptions, setCareerOptions] = useState<IOption[]>([]);
-  const [planOptions, setPlanOptions] = useState<IOption[]>([]);
-  const [semestersOptions, setSemestersOptions] = useState<IOption[]>([]);
+  const navigate = useNavigate();
 
   const addHelpIndicatorClass = (element: string) => {
     return element ? '' : 'help-indicator';
@@ -29,13 +39,48 @@ export default function ScheduleSelect({
 
   useEffect(() => {
     if (career && plan && semester) {
-      //TODO: get schedule from api
-      setSchedule([]);
+      ScheduleApi.getSchedule({ semester_id: semester }).then(res => {
+        const { schedule } = res.data;
+        console.log(schedule);
+        setSchedule(schedule);
+        if (schedule.length === 0) {
+          setHandleGenerateBtn(() => () => {
+            toast
+              .promise(
+                ScheduleApi.postSchedule({ semester_id: parseInt(semester) }),
+                {
+                  pending: {
+                    render: 'Generando horario...',
+                  },
+                  success: {
+                    render: 'Horario generado',
+                  },
+                  error: {
+                    render: 'Error al generar horario',
+                  },
+                },
+              )
+              .then(res => {
+                const { schedule } = res.data;
+                console.log(schedule);
+                setSchedule(schedule);
+                navigate(
+                  `/manage-schedule/edit-schedule/${career}/${plan}/${semester}`,
+                );
+              });
+          });
+        }
+        setHandleEditBtn(() => () => {
+          navigate(
+            `/manage-schedule/edit-schedule/${career}/${plan}/${semester}`,
+          );
+        });
+      });
     }
-  }, [career, plan, semester, setSchedule]);
+  }, [career, plan, semester]);
 
   useEffect(() => {
-    getCareers().then(res => {
+    CareerApi.getCareers().then(res => {
       setCareerOptions(
         res.data.careers.map(({ name, code }) => ({
           label: name,
@@ -47,7 +92,7 @@ export default function ScheduleSelect({
 
   useEffect(() => {
     if (career) {
-      getPlans({ career_code: career }).then(res => {
+      PlanApi.getPlans({ career_code: career }).then(res => {
         setPlanOptions(
           res.data.years.map(({ year }) => ({
             label: `Plan ${year}`,
@@ -60,11 +105,11 @@ export default function ScheduleSelect({
 
   useEffect(() => {
     if (plan) {
-      getSemesters({ plan_code: `${career}_${plan}` }).then(res => {
+      SemesterApi.getSemesters({ plan_code: `${career}_${plan}` }).then(res => {
         setSemestersOptions(
-          res.data.semesters.map(({ number }) => ({
+          res.data.semesters.map(({ id, number }) => ({
             label: `Semestre ${number}`,
-            value: `${number}`,
+            value: `${id}`,
           })),
         );
       });

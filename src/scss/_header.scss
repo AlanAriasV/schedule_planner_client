@@ -12,10 +12,9 @@
 
   .header-title {
     font-size: $text-md2;
-    text-transform: capitalize;
     span {
       font-size: $text-md2;
-      color: $color-grey;
+      color: $color-dark-grey;
 
       &:last-child {
         color: $color-dark;

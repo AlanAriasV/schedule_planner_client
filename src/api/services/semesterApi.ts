@@ -1,12 +1,17 @@
-import axiosInstance from '..';
+import { axiosInstance } from '..';
 
-export function getSemesters({ plan_code }: { plan_code: string }) {
-  return axiosInstance.get<{
-    semesters: { number: number }[];
-    type: string;
-  }>('/semester/', {
-    params: {
-      plan_code,
-    },
-  });
+export default class SemesterApi {
+  static async getSemesters({ plan_code }: { plan_code: string }) {
+    return axiosInstance.get<{
+      semesters: {
+        id: number;
+        number: number;
+      }[];
+      type: string;
+    }>('/semester/', {
+      params: {
+        plan_code,
+      },
+    });
+  }
 }

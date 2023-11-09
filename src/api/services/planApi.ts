@@ -1,16 +1,18 @@
-import axiosInstance from '..';
+import { axiosInstance } from '..';
 
-interface IPlan {
+interface GetPlanProps {
   career_code: string;
 }
 
-export function getPlans({ career_code }: IPlan) {
-  return axiosInstance.get<{
-    years: { year: number }[];
-    type: string;
-  }>('/plan/years', {
-    params: {
-      career_code,
-    },
-  });
+export default class PlanApi {
+  static async getPlans({ career_code }: GetPlanProps) {
+    return axiosInstance.get<{
+      years: { year: number }[];
+      type: string;
+    }>('/plan/years', {
+      params: {
+        career_code,
+      },
+    });
+  }
 }

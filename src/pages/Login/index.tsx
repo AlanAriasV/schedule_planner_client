@@ -3,8 +3,8 @@ import { GrFormViewHide, GrFormView } from 'react-icons/gr';
 import { useEffect, useState } from 'react';
 import { RutFormat, formatRut } from '@fdograph/rut-utilities';
 import { toast } from 'react-toastify';
-import { autoLogin, login } from 'src/api';
-import useUserStore from 'src/store/useUserStore';
+import { AuthApi } from 'src/api';
+import { useUserStore } from 'src/store';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -44,30 +44,22 @@ function Login() {
       toast.error('Asegúrese de llenar todos los campos');
       return;
     }
-    login({ run, password: password.toString() })
+    AuthApi.login({ run, password: password.toString() })
       .then(res => {
-        const { token, ...user } = res.data;
+        const { token, user } = res.data;
         localStorage.setItem('token', token);
         toast.success('Sesión iniciada');
-        setUser(user);
+        setUser({ ...user, isLoading: false }).then(() => {
+          navigate('/home');
+        });
       })
       .catch(err => toast.error(`${err.response.data.msg}`));
   };
 
   useEffect(() => {
-    if (userRun) {
+    const token = localStorage.getItem('token');
+    if (token) {
       navigate('/home');
-    } else {
-      autoLogin()
-        .then(res => {
-          const { iat, exp, ...user } = res.data;
-          console.log(user);
-          setUser(user);
-          navigate('/home');
-        })
-        .catch(err => {
-          console.log(err.response.data);
-        });
     }
   }, [userRun]);
 

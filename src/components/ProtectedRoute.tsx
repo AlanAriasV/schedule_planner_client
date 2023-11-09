@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { autoLogin } from 'src/api';
-import useUserStore from 'src/store/useUserStore';
+import { AuthApi } from 'src/api';
+import { useUserStore } from 'src/store';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -12,11 +12,10 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const navigate = useNavigate();
   useEffect(() => {
     if (!run) {
-      autoLogin()
+      AuthApi.autoLogin()
         .then(res => {
-          console.log(res.data);
-          const { iat, exp, ...user } = res.data;
-          setUser(user);
+          const user = res.data.user;
+          setUser({ ...user, isLoading: false });
         })
         .catch(err => {
           console.log(err.response.data);

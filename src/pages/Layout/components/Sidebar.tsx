@@ -3,10 +3,11 @@ import { CustomButton, CustomNavLink } from 'src/components';
 import { sideBarOptions } from 'src/utils/const';
 import { AiOutlineMenu, AiOutlineLogout } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
-import useUserStore from 'src/store/useUserStore';
+import { useScheduleStore, useUserStore } from 'src/store';
 
 export default function Sidebar() {
-  const { resetUser } = useUserStore(state => state);
+  const { role, resetUser } = useUserStore(state => state);
+  const { days: schedule, resetSchedule } = useScheduleStore(state => state);
   const [expanded, setExpanded] = useState<boolean>(
     localStorage.getItem('expanded') === 'true' || false,
   );
@@ -14,8 +15,9 @@ export default function Sidebar() {
 
   const onclickLogout = () => {
     localStorage.removeItem('token');
-    resetUser();
-    navigate('/login');
+    resetUser().then(() => {
+      navigate('/login');
+    });
   };
 
   useEffect(() => {
@@ -35,12 +37,23 @@ export default function Sidebar() {
         name="Menu"
       />
       {sideBarOptions.map(option => {
-        return (
-          <CustomNavLink
-            key={option.path}
-            {...option}
-          />
-        );
+        if (option.for.includes(role)) {
+          return (
+            <CustomNavLink
+              key={option.path}
+              {...option}
+              onClick={
+                option.path === '/manage-schedule'
+                  ? () => {
+                      if (schedule) {
+                        resetSchedule();
+                      }
+                    }
+                  : undefined
+              }
+            />
+          );
+        }
       })}
       <CustomButton
         onClick={onclickLogout}

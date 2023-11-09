@@ -3,8 +3,8 @@ import {
   AiFillSchedule,
   AiOutlineHome,
   AiOutlineSchedule,
+  AiOutlineSwap,
 } from 'react-icons/ai';
-import { IoMdSwap } from 'react-icons/io';
 import {
   DraggableProvidedDragHandleProps,
   DraggableProvidedDraggableProps,
@@ -27,6 +27,7 @@ interface SideBarOption {
   path: string;
   iconOutline: JSX.Element;
   iconFill: JSX.Element;
+  for: string[];
 }
 
 export const sideBarOptions: SideBarOption[] = [
@@ -35,30 +36,28 @@ export const sideBarOptions: SideBarOption[] = [
     path: '/home',
     iconOutline: <AiOutlineHome className="icon" />,
     iconFill: <AiFillHome className="icon" />,
+    for: ['admin', 'student', 'teacher', 'departmentChief'],
   },
   {
     name: 'Manage Schedule',
     path: '/manage-schedule',
     iconOutline: <AiOutlineSchedule className="icon" />,
     iconFill: <AiFillSchedule className="icon" />,
-  },
-  {
-    name: 'Edit Schedule',
-    path: '/edit-schedule/ICCI/2019/5',
-    iconOutline: <AiOutlineSchedule className="icon" />,
-    iconFill: <AiFillSchedule className="icon" />,
+    for: ['admin'],
   },
   {
     name: 'Editar disponibilidad',
     path: '/edit-availability',
     iconOutline: <AiOutlineSchedule className="icon" />,
     iconFill: <AiFillSchedule className="icon" />,
+    for: ['admin', 'teacher', 'departmentChief'],
   },
   {
     name: 'Intercambiar horario',
     path: '/trade-schedule',
-    iconOutline: <IoMdSwap className="icon" />,
-    iconFill: <IoMdSwap className="icon" />,
+    iconOutline: <AiOutlineSwap className="icon" />,
+    iconFill: <AiOutlineSwap className="icon" />,
+    for: ['student'],
   },
 ];
 export const router = createBrowserRouter(
@@ -82,9 +81,10 @@ export const router = createBrowserRouter(
         {
           path: 'manage-schedule',
           element: <ScheduleManager />,
+          children: [],
         },
         {
-          path: 'edit-schedule/:career/:plan/:semester',
+          path: 'manage-schedule/edit-schedule/:career/:plan/:semester',
           element: <ScheduleEdit />,
         },
         {
@@ -98,12 +98,12 @@ export const router = createBrowserRouter(
       ],
     },
     {
-      path: '*',
-      element: <Navigate to={'/home'} />,
-    },
-    {
       path: 'login',
       element: <Login />,
+    },
+    {
+      path: '*',
+      element: <Navigate to={'/home'} />,
     },
   ],
   {

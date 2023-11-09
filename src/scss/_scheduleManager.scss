@@ -13,6 +13,9 @@
 .schedule-grid__container.manager {
   position: relative;
 
+  .schedule-grid {
+    position: initial;
+  }
   .generate-schedule__container {
     grid-column: 1 / -1;
     display: flex;

@@ -32,6 +32,9 @@ dependencies:
   react-router-dom:
     specifier: ^6.18.0
     version: 6.18.0(react-dom@18.2.0)(react@18.2.0)
+  react-scroll-sync:
+    specifier: ^0.11.2
+    version: 0.11.2(react-dom@18.2.0)(react@18.2.0)
   react-select:
     specifier: ^5.7.7
     version: 5.7.7(@types/react@18.2.34)(react-dom@18.2.0)(react@18.2.0)
@@ -55,6 +58,9 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18.2.7
     version: 18.2.14
+  '@types/react-scroll-sync':
+    specifier: ^0.8.7
+    version: 0.8.7
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.0.0
     version: 6.9.1(@typescript-eslint/parser@6.9.1)(eslint@8.52.0)(typescript@5.2.2)
@@ -693,6 +699,12 @@ packages:
       hoist-non-react-statics: 3.3.2
       redux: 4.2.1
     dev: false
+
+  /@types/react-scroll-sync@0.8.7:
+    resolution: {integrity: sha512-5mne/p29p/mqPnmWHqKKijktha+GsSsyhqhJDKGzl9OaIRdVEobzjFp/6zWSutv7dNvVfzxCe2AAmCwFlemxuQ==}
+    dependencies:
+      '@types/react': 18.2.34
+    dev: true
 
   /@types/react-transition-group@4.4.8:
     resolution: {integrity: sha512-QmQ22q+Pb+HQSn04NL3HtrqHwYMf4h3QKArOy5F8U5nEVMaihBs3SR10WiOM1iwPz5jIo8x/u11al+iEGZZrvg==}
@@ -1843,6 +1855,17 @@ packages:
     dependencies:
       '@remix-run/router': 1.11.0
       react: 18.2.0
+    dev: false
+
+  /react-scroll-sync@0.11.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-n7m+bbRTSWuczhKQf6Evvl7PFGkTt4RfP4bhyUtUyv6znovpybhAScQDdrFr9Jh280nG39x9AWMY8j477PHL1A==}
+    peerDependencies:
+      react: 16.x || 17.x || 18.x
+      react-dom: 16.x || 17.x || 18.x
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-select@5.7.7(@types/react@18.2.34)(react-dom@18.2.0)(react@18.2.0):

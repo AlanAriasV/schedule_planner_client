@@ -7,6 +7,7 @@ import {
 import { Card } from './components';
 import { CardContainer } from 'src/components/';
 import {
+  useEffect,
   // useEffect,
   useState,
 } from 'react';
@@ -25,31 +26,53 @@ import {
   isFilled,
 } from './functions';
 import { blockHours } from 'src/utils/dataTemp';
-import { ClipLoader } from 'react-spinners';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useScheduleStore } from 'src/store';
+// import ScheduleApi from 'src/api/services/scheduleApi';
 interface OccupiedBlocks {
   day: string;
   block: number;
 }
 
+// schedule: {
+//   [crypto.randomUUID()]: {
+//     items: scheduleExample,
+//     name: 'Horario',
+//     type: 'schedule',
+//   },
+// },
+
 export default function ScheduleEdit() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [parent, enableAnimations] = useAutoAnimate();
+  const { days } = useScheduleStore(state => state);
 
-  // const { career, plan, semester } = useParams();
+  const [parent] = useAutoAnimate();
 
-  const [schedule, setSchedule] = useState<DnDItem<ScheduleDay>>(
-    initialData.schedule as DnDItem<ScheduleDay>,
-  );
+  const [occupiedBlocks, _] = useState<OccupiedBlocks[]>([]);
+
+  const [schedule, setSchedule] = useState<DnDItem<ScheduleDay>>({
+    [crypto.randomUUID()]: {
+      items: days ?? [],
+      name: 'Horario',
+      type: 'schedule',
+    },
+  });
   const [subjects, setSubjects] = useState<DnDItem<Subject>>(
     initialData.subjects as DnDItem<Subject>,
   );
+
+  const navigate = useNavigate();
+
   const teachers = initialData.teachers as DnDItem<Teacher>;
   const laboratories = initialData.laboratories as DnDItem<Laboratory>;
-  const [occupiedBlocks, _] = useState<OccupiedBlocks[]>([]);
 
-  //TODO: implement axios query to get all data
+  useEffect(() => {
+    if (!days) {
+      // ScheduleApi.getSchedule({}).then(res => {
+      // });
+      navigate('/manage-schedule');
+    }
+  }, [days]);
 
   const deleteAssignment = ({
     day,
@@ -179,226 +202,208 @@ export default function ScheduleEdit() {
     });
   };
 
-  // useEffect(() => {
-  //   console.log(schedule);
-  // }, [schedule]);
-
   return (
     <main
       ref={parent}
       className="schedule-edit-container"
     >
-      {isLoading && (
-        <ClipLoader
-          className="loader"
-          size={70}
-          onClick={() => setIsLoading(false)}
-        />
-      )}
-      {!isLoading && (
-        <DragDropContext onDragEnd={onDragEnd}>
-          {Object.entries(schedule).map(([uuid, { name, items }]) => (
-            <CardContainer
-              dataType="schedule"
-              title={name}
-              key={uuid}
-              style={{ gridTemplateRows: '100%', overflow: 'hidden' }}
-            >
-              <ScheduleGrid key={uuid}>
+      <DragDropContext onDragEnd={onDragEnd}>
+        {Object.entries(schedule).map(([uuid, { name, items }]) => (
+          <CardContainer
+            dataType="schedule"
+            title={name}
+            key={uuid}
+            style={{ gridTemplateRows: '100%', overflow: 'hidden' }}
+          >
+            <ScheduleGrid key={uuid}>
+              <ScheduleColumn
+                title="Hora"
+                dataColor={'white'}
+              >
+                {blockHours.map((blockHour, blockIndex) => (
+                  <ScheduleBlock
+                    key={blockIndex}
+                    blockNumber={blockIndex + 1}
+                    className="hour-block"
+                  >
+                    <ScheduleInfo
+                      text={blockHour}
+                      className="name"
+                    />
+                  </ScheduleBlock>
+                ))}
+              </ScheduleColumn>
+              {(items as ScheduleDay[]).map(({ dayName: day, blocks }) => (
                 <ScheduleColumn
-                  title="Hora"
+                  key={crypto.randomUUID()}
+                  title={day}
                   dataColor={'white'}
                 >
-                  {blockHours.map((blockHour, blockIndex) => (
-                    <ScheduleBlock
-                      key={blockIndex}
-                      blockNumber={blockIndex + 1}
-                      className="hour-block"
-                    >
-                      <ScheduleInfo
-                        text={blockHour}
-                        className="name"
-                      />
-                    </ScheduleBlock>
-                  ))}
-                </ScheduleColumn>
-                {(items as ScheduleDay[]).map(({ dayName: day, blocks }) => (
-                  <ScheduleColumn
-                    key={crypto.randomUUID()}
-                    title={day}
-                    dataColor={'white'}
-                  >
-                    {blocks.map(
-                      ({ blockNumber, subject, teacher, laboratory }) => (
-                        <Droppable
-                          key={`${blockNumber}-${day}`}
-                          droppableId={`${blockNumber}-${day}`}
-                          isDropDisabled={occupiedBlocks.some(
-                            ({ day: occupiedDay, block: occupiedBlock }) =>
-                              occupiedDay === day &&
-                              occupiedBlock === blockNumber,
-                          )}
-                        >
-                          {(provided, _) => (
-                            <ScheduleBlock
-                              blockNumber={blockNumber}
-                              droppableProps={provided.droppableProps}
-                              reference={provided.innerRef}
-                            >
-                              <ScheduleInfo
-                                text={subject['code']}
-                                className={'code'}
-                              />
-
-                              {['name', 'teacher', 'laboratory'].map(
-                                (key, index) => {
-                                  let className = '';
-                                  let text = '';
-                                  let code = '';
-                                  switch (key) {
-                                    case 'name':
-                                      className = 'name';
-                                      text = subject.name;
-                                      code = subject.code;
-                                      break;
-                                    case 'teacher':
-                                      className = 'teacher';
-                                      text = teacher.name;
-                                      code = teacher.code;
-                                      break;
-                                    case 'laboratory':
-                                      className = 'laboratory';
-                                      text = laboratory.name;
-                                      code = laboratory.code;
-                                      break;
-                                  }
-                                  return (
-                                    <Draggable
-                                      key={`${day}-${blockNumber}-${className}-${code}`}
-                                      draggableId={`${day}-${blockNumber}-${className}-${code}`}
-                                      index={index}
-                                      isDragDisabled={true}
-                                    >
-                                      {(provided, _) => (
-                                        <ScheduleInfo
-                                          text={text}
-                                          className={className}
-                                          reference={provided.innerRef}
-                                          draggableProps={
-                                            provided.draggableProps
-                                          }
-                                          dragHandleProps={
-                                            provided.dragHandleProps
-                                          }
-                                          onClick={() =>
-                                            deleteAssignment({
-                                              block: blockNumber,
-                                              code: code,
-                                              day: day,
-                                              type: key.replace(
-                                                'name',
-                                                'subject',
-                                              ),
-                                            })
-                                          }
-                                        />
-                                      )}
-                                    </Draggable>
-                                  );
-                                },
-                              )}
-
-                              {provided.placeholder}
-                            </ScheduleBlock>
-                          )}
-                        </Droppable>
-                      ),
-                    )}
-                  </ScheduleColumn>
-                ))}
-              </ScheduleGrid>
-            </CardContainer>
-          ))}
-          {[subjects, teachers, laboratories].map(obj =>
-            Object.entries(obj).map(([uuid, { items, name, type }]) => (
-              <Droppable
-                droppableId={uuid}
-                key={uuid}
-                isDropDisabled={true}
-              >
-                {(provided, _) => (
-                  <CardContainer
-                    dataType={type}
-                    title={name}
-                    reference={provided.innerRef}
-                    droppableProps={provided.droppableProps}
-                  >
-                    {type !== 'teachers' && (
-                      <>
-                        {(items as (Subject | Laboratory)[]).map(
-                          (item, index) => {
-                            const { code, name } = item;
-                            let isDragDisabled = false;
-                            if ((item as Subject).maxBlocks !== undefined) {
-                              isDragDisabled =
-                                (item as Subject).maxBlocks === 0;
-                            }
-                            return (
-                              <Draggable
-                                draggableId={code}
-                                index={index}
-                                key={code}
-                                isDragDisabled={isDragDisabled}
-                              >
-                                {(provided, _) => (
-                                  <Card
-                                    code={code}
-                                    name={name}
-                                    reference={provided.innerRef}
-                                    draggableProps={provided.draggableProps}
-                                    dragHandleProps={provided.dragHandleProps}
-                                    className={
-                                      isDragDisabled ? 'isDragDisabled' : ''
-                                    }
-                                  />
-                                )}
-                              </Draggable>
-                            );
-                          },
+                  {blocks.map(
+                    ({ blockNumber, subject, teacher, laboratory }) => (
+                      <Droppable
+                        key={`${blockNumber}-${day}`}
+                        droppableId={`${blockNumber}-${day}`}
+                        isDropDisabled={occupiedBlocks.some(
+                          ({ day: occupiedDay, block: occupiedBlock }) =>
+                            occupiedDay === day &&
+                            occupiedBlock === blockNumber,
                         )}
-                      </>
-                    )}
-                    {type === 'teachers' && (
-                      <>
-                        {(items as Teacher[]).map(
-                          ({ code, name, career }, index) => (
+                      >
+                        {(provided, _) => (
+                          <ScheduleBlock
+                            blockNumber={blockNumber}
+                            droppableProps={provided.droppableProps}
+                            reference={provided.innerRef}
+                          >
+                            <ScheduleInfo
+                              text={subject['code']}
+                              className={'code'}
+                            />
+
+                            {['name', 'teacher', 'laboratory'].map(
+                              (key, index) => {
+                                let className = '';
+                                let text = '';
+                                let code = '';
+                                switch (key) {
+                                  case 'name':
+                                    className = 'name';
+                                    text = subject.name;
+                                    code = subject.code;
+                                    break;
+                                  case 'teacher':
+                                    className = 'teacher';
+                                    text = teacher.name;
+                                    code = teacher.code;
+                                    break;
+                                  case 'laboratory':
+                                    className = 'laboratory';
+                                    text = laboratory.name;
+                                    code = laboratory.code;
+                                    break;
+                                }
+                                return (
+                                  <Draggable
+                                    key={`${day}-${blockNumber}-${className}-${code}`}
+                                    draggableId={`${day}-${blockNumber}-${className}-${code}`}
+                                    index={index}
+                                    isDragDisabled={true}
+                                  >
+                                    {(provided, _) => (
+                                      <ScheduleInfo
+                                        text={text}
+                                        className={className}
+                                        reference={provided.innerRef}
+                                        draggableProps={provided.draggableProps}
+                                        dragHandleProps={
+                                          provided.dragHandleProps
+                                        }
+                                        onClick={() =>
+                                          deleteAssignment({
+                                            block: blockNumber,
+                                            code: code,
+                                            day: day,
+                                            type: key.replace(
+                                              'name',
+                                              'subject',
+                                            ),
+                                          })
+                                        }
+                                      />
+                                    )}
+                                  </Draggable>
+                                );
+                              },
+                            )}
+
+                            {provided.placeholder}
+                          </ScheduleBlock>
+                        )}
+                      </Droppable>
+                    ),
+                  )}
+                </ScheduleColumn>
+              ))}
+            </ScheduleGrid>
+          </CardContainer>
+        ))}
+        {[subjects, teachers, laboratories].map(obj =>
+          Object.entries(obj).map(([uuid, { items, name, type }]) => (
+            <Droppable
+              droppableId={uuid}
+              key={uuid}
+              isDropDisabled={true}
+            >
+              {(provided, _) => (
+                <CardContainer
+                  dataType={type}
+                  title={name}
+                  reference={provided.innerRef}
+                  droppableProps={provided.droppableProps}
+                >
+                  {type !== 'teachers' && (
+                    <>
+                      {(items as (Subject | Laboratory)[]).map(
+                        (item, index) => {
+                          const { code, name } = item;
+                          let isDragDisabled = false;
+                          if ((item as Subject).maxBlocks !== undefined) {
+                            isDragDisabled = (item as Subject).maxBlocks === 0;
+                          }
+                          return (
                             <Draggable
                               draggableId={code}
                               index={index}
                               key={code}
+                              isDragDisabled={isDragDisabled}
                             >
                               {(provided, _) => (
                                 <Card
-                                  code={career.code}
+                                  code={code}
                                   name={name}
                                   reference={provided.innerRef}
                                   draggableProps={provided.draggableProps}
                                   dragHandleProps={provided.dragHandleProps}
+                                  className={
+                                    isDragDisabled ? 'isDragDisabled' : ''
+                                  }
                                 />
                               )}
                             </Draggable>
-                          ),
-                        )}
-                      </>
-                    )}
-                    {provided.placeholder}
-                  </CardContainer>
-                )}
-              </Droppable>
-            )),
-          )}
-        </DragDropContext>
-      )}
+                          );
+                        },
+                      )}
+                    </>
+                  )}
+                  {type === 'teachers' && (
+                    <>
+                      {(items as Teacher[]).map(({ code, name }, index) => (
+                        <Draggable
+                          draggableId={code}
+                          index={index}
+                          key={code}
+                        >
+                          {(provided, _) => (
+                            <Card
+                              code={code}
+                              name={name}
+                              reference={provided.innerRef}
+                              draggableProps={provided.draggableProps}
+                              dragHandleProps={provided.dragHandleProps}
+                            />
+                          )}
+                        </Draggable>
+                      ))}
+                    </>
+                  )}
+                  {provided.placeholder}
+                </CardContainer>
+              )}
+            </Droppable>
+          )),
+        )}
+      </DragDropContext>
     </main>
   );
 }

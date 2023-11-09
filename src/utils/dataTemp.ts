@@ -4,92 +4,42 @@ export const teachers: Teacher[] = [
   {
     code: '1',
     name: 'John Doe',
-    career: {
-      code: 'ICCI',
-      name: 'Ingeniería Civil en Computación e Informática',
-      subjectCode: 'CC',
-    },
   },
   {
     code: '2',
     name: 'Jane Smith',
-    career: {
-      code: 'IE',
-      name: 'Ingeniería Electrónica',
-      subjectCode: 'EE',
-    },
   },
   {
     code: '3',
     name: 'Robert Johnson',
-    career: {
-      code: 'IM',
-      name: 'Ingeniería Mecánica',
-      subjectCode: 'ME',
-    },
   },
   {
     code: '4',
     name: 'Michael Brown',
-    career: {
-      code: 'ICCI',
-      name: 'Ingeniería Civil en Computación e Informática',
-      subjectCode: 'CC',
-    },
   },
   {
     code: '5',
     name: 'Sarah Davis',
-    career: {
-      code: 'ICCI',
-      name: 'Ingeniería Civil en Computación e Informática',
-      subjectCode: 'CC',
-    },
   },
   {
     code: '6',
     name: 'David Miller',
-    career: {
-      code: 'ICCI',
-      name: 'Ingeniería Civil en Computación e Informática',
-      subjectCode: 'CC',
-    },
   },
   {
     code: '7',
     name: 'Jessica Wilson',
-    career: {
-      code: 'II',
-      name: 'Ingeniería Industrial',
-      subjectCode: 'IN',
-    },
   },
   {
     code: '8',
     name: 'Daniel Moore',
-    career: {
-      code: 'ICCI',
-      name: 'Ingeniería Civil en Computación e Informática',
-      subjectCode: 'CC',
-    },
   },
   {
     code: '9',
     name: 'Emily Taylor',
-    career: {
-      code: 'IEE',
-      name: 'Ingeniería en Energía',
-      subjectCode: 'EN',
-    },
   },
   {
     code: '10',
     name: 'James Anderson',
-    career: {
-      code: 'IMT',
-      name: 'Ingeniería en Mecatrónica',
-      subjectCode: 'MT',
-    },
   },
 ];
 
@@ -187,6 +137,10 @@ export function generateRandomSchedule() {
 }
 
 export const scheduleExample: ScheduleDay[] = generateRandomSchedule();
+
+export const schedulesAlternatives = Array.from({ length: 5 }, () =>
+  generateRandomSchedule(),
+);
 
 export const ScheduleOptions = [
   {

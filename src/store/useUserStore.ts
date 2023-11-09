@@ -6,29 +6,47 @@ interface UserStore {
   role: string;
   run: string;
   isLoading: boolean;
-  setUser: (user: UserStore) => void;
-  setLoading: (isLoading: boolean) => void;
-  resetUser: () => void;
+}
+interface UserActionsStore {
+  setUser: (user: UserStore) => Promise<Boolean>;
+  setLoading: (isLoading: boolean) => Promise<Boolean>;
+  resetUser: () => Promise<Boolean>;
 }
 
-const initialState = {
+const initialState: UserStore = {
   email: '',
   full_name: '',
   role: '',
   run: '',
+  isLoading: true,
 };
 
-const useUserStore = create<UserStore>(set => ({
+const useUserStore = create<UserStore & UserActionsStore>(set => ({
   ...initialState,
-  isLoading: true,
-  setUser: user => {
-    set({ ...user, isLoading: false });
+  setUser: async user => {
+    try {
+      set({ ...user });
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
   },
-  setLoading: isLoading => {
-    set({ isLoading });
+  setLoading: async isLoading => {
+    try {
+      set({ isLoading });
+      return true;
+    } catch (error) {
+      return false;
+    }
   },
-  resetUser: () => {
-    set(initialState);
+  resetUser: async () => {
+    try {
+      set(initialState);
+      return true;
+    } catch (error) {
+      return false;
+    }
   },
 }));
 

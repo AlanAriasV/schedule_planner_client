@@ -7,11 +7,6 @@ interface Subject {
 interface Teacher {
   code: string;
   name: string;
-  career: {
-    code: string;
-    name: string;
-    subjectCode: string;
-  };
 }
 
 interface Laboratory {
@@ -22,7 +17,7 @@ interface Laboratory {
 interface ScheduleBlock {
   blockNumber: number;
   subject: Omit<Subject, 'maxBlocks'>;
-  teacher: Omit<Teacher, 'career'>;
+  teacher: Teacher;
   laboratory: Laboratory;
 }
 

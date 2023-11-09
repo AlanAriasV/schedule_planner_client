@@ -3,7 +3,7 @@
 .schedule-edit-container {
   display: grid;
   grid-template-columns: 70% auto;
-  grid-template-rows: repeat(3, minmax(0, 263px));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
   grid-template-areas:
     'schedule subjects'
     'schedule teachers'

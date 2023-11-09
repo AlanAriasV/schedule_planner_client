@@ -5,44 +5,32 @@ import { ScheduleSelect } from './components';
 import autoAnimate from '@formkit/auto-animate';
 import { blockHours } from 'src/utils/dataTemp';
 import { EditButton } from 'src/components/';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { useScheduleStore } from 'src/store';
 
 export default function ScheduleManager() {
-  const [schedule, setSchedule] = useState<ScheduleDay[] | undefined>(
-    undefined,
+  const { days: schedule } = useScheduleStore(state => state);
+
+  const [handleGenerateBtn, setHandleGenerateBtn] = useState<() => void>(
+    () => {},
   );
+  const [handleEditBtn, setHandleEditBtn] = useState<() => void>(() => {});
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const parent = useRef(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    parent.current && autoAnimate(parent.current, { duration: 250 });
+    parent.current && autoAnimate(parent.current);
   }, [parent]);
-
-  const handleEditBtn = () => {
-    navigate('/edit-schedule');
-  };
-
-  const handleGenerateBtn = () => {
-    setLoading(true);
-    const fetchingToast = toast.loading('Generando horario...', {
-      toastId: 'fetching',
-    });
-
-    //     .then(res => {
-    //       toast.update(id, {render: "Horario generado", type: "success", isLoading: false});
-    //  }).catch(err => {
-    //         toast.update(id, {render: "Error al generar horario", type: "error", isLoading: false });
-    //    });
-  };
 
   return (
     <main className="schedule-manager">
       <h1 className="schedule-manager__title">Horario</h1>
       <div className="schedule-manager__select-schedule-container">
-        <ScheduleSelect setSchedule={setSchedule} />
+        <ScheduleSelect
+          setHandleGenerateBtn={setHandleGenerateBtn}
+          setHandleEditBtn={setHandleEditBtn}
+        />
       </div>
       <div
         ref={parent}
@@ -56,7 +44,10 @@ export default function ScheduleManager() {
                   <h3>No hay horario</h3>
                   <button
                     className="btn"
-                    onClick={handleGenerateBtn}
+                    onClick={() => {
+                      handleGenerateBtn();
+                      setLoading(true);
+                    }}
                     disabled={loading}
                   >
                     Generar
@@ -115,6 +106,7 @@ export default function ScheduleManager() {
                       )}
                     </ScheduleColumn>
                   ))}
+
                   <EditButton
                     text={'Editar'}
                     onClick={handleEditBtn}

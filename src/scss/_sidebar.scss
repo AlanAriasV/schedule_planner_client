@@ -1,7 +1,10 @@
 @import 'base';
 
 .sidebar {
-  grid-area: sidebar;
+  position: absolute;
+  top: 0;
+  left: 0;
+  // grid-area: sidebar;
   background-color: $color-dark;
   display: flex;
   flex-direction: column;
@@ -9,6 +12,7 @@
   height: 100%;
   padding: 5px;
   transition: max-width 0.25s;
+  z-index: 3;
 
   &-option {
     cursor: pointer;
