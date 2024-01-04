@@ -8,10 +8,11 @@ import { useUserStore } from 'src/store';
 import { blockHours } from 'src/utils/dataTemp';
 
 export default function Schedule() {
-  const run = useUserStore((state) => state.run);
+  const { run, full_name, role } = useUserStore((state) => state);
   const [personalSchedule, setPersonalSchedule] = useState<ScheduleDay[]>();
 
   useEffect(() => {
+    if (role !== 'student') return
     toast.loading('Cargando horario', { toastId: 'loading' })
     axiosInstance.get(`${import.meta.env.VITE_API_URL}/schedule/private?run=${run}`).then((res) => {
       if (res.data.schedule) {
@@ -26,6 +27,12 @@ export default function Schedule() {
     }
     );
   }, []);
+
+  if (role !== 'student') return (
+    <main>
+      <h1>Bienvenido {full_name}</h1>
+      <p>Usted no posee un horario</p>
+    </main>)
 
   return (
     <main className="schedule-visualizer">
