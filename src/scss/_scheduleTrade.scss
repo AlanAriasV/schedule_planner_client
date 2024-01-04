@@ -113,6 +113,17 @@
     }
 
     .schedule-grid__block {
+      &__info-name {
+        width: 100%;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-wrap: break-word;
+        text-overflow: ellipsis;
+        font-size: 15px;
+      }
+
       &.selectable {
         cursor: pointer;
       }

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import FadeLoader from 'react-spinners/FadeLoader';
 import { AuthApi } from 'src/api';
 import { useUserStore } from 'src/store';
 
@@ -26,7 +27,9 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   }, [run]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className='loading-icon__container'>
+      <FadeLoader />
+    </div>;
   } else {
     return (
       <>

@@ -4,6 +4,13 @@ interface Subject {
   maxBlocks: number;
 }
 
+interface EnrolledSubject {
+  code: string;
+  name: string;
+  letter: string;
+}
+
+
 interface Teacher {
   code: string;
   name: string;
@@ -16,9 +23,15 @@ interface Laboratory {
 
 interface ScheduleBlock {
   blockNumber: number;
+  group: Group;
   subject: Omit<Subject, 'maxBlocks'>;
   teacher: Teacher;
   laboratory: Laboratory;
+}
+
+interface Group {
+  id: number;
+  letter: string;
 }
 
 interface ScheduleDay {

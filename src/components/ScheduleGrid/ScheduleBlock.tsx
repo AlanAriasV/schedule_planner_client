@@ -6,6 +6,7 @@ interface ScheduleBlockProps {
   children: ReactNode;
   reference?: React.Ref<HTMLDivElement>;
   className?: string;
+  style?: React.CSSProperties;
   onClick?: () => void;
 }
 
@@ -16,6 +17,7 @@ export default function ScheduleBlock({
   droppableProps,
   reference,
   onClick,
+  style
 }: ScheduleBlockProps & DroppableProps) {
   return (
     <div
@@ -23,6 +25,7 @@ export default function ScheduleBlock({
       className={`schedule-grid__block` + (className ? ` ${className}` : '')}
       {...droppableProps}
       onClick={onClick}
+      style={style}
     >
       <span className="schedule-grid__block-number">{blockNumber}</span>
       {children}

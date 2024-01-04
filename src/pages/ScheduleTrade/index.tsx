@@ -16,15 +16,15 @@ import {
 } from 'src/components';
 import CardContainer from 'src/components/CardContainer';
 import Select from 'react-select';
-
 import {
   blockHours,
-  scheduleExample,
-  enrolledSubjectsExample,
   schedulesAlternatives,
 } from 'src/utils/dataTemp';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
+import useUserStore from 'src/store/useUserStore';
+import { axiosInstance } from 'src/api';
+import FadeLoader from 'react-spinners/FadeLoader';
 
 export default function ScheduleTrade() {
   const [selectedSubject, setSelectedSubject] = useState('');
@@ -34,16 +34,72 @@ export default function ScheduleTrade() {
   const [selectedPage, setSelectedPage] = useState(0);
   const { subject } = useParams();
   const navigate = useNavigate();
+  const [enrolledSubjects, setEnrolledSubjects] = useState<EnrolledSubject[]>([]);
+  const run = useUserStore((state) => state.run);
+  const [personalSchedule, setPersonalSchedule] = useState<ScheduleDay[]>();
+  const [alternativeSchedules, setAlternativeSchedules] = useState<Omit<ScheduleDay, 'teacher' | 'laboratory'>[][]>([]);
 
   let blockConflicts = 0;
 
   const schedule1Ref = useRef<HTMLDivElement>(null);
   const schedule2Ref = useRef<HTMLDivElement>(null);
 
-  const subjectOptions = enrolledSubjectsExample.map(subject => ({
+  const subjectOptions = enrolledSubjects.map(subject => ({
     value: subject.code,
     label: subject.name,
-  }));
+  }))
+
+
+  //Recuperacion de horario
+  useEffect(() => {
+    toast.loading('Cargando horario', { toastId: 'loading' })
+    axiosInstance.get(`${import.meta.env.VITE_API_URL}/schedule/private?run=${run}`).then((res) => {
+      if (res.data.schedule) {
+        setPersonalSchedule(res.data.schedule);
+        toast.update('loading', { render: 'Se cargo el horario correctamente', type: 'success', isLoading: false, autoClose: 3000 });
+        return
+      }
+    }
+    ).catch((err) => {
+      toast.update('loading', { render: 'No se pudo cargar el horario', type: 'error', isLoading: false, autoClose: 3000 });
+      console.log(err);
+    }
+    );
+  }, []);
+
+  //Recuperacion de asignaturas inscritas
+  useEffect(() => {
+    axiosInstance.get(`${import.meta.env.VITE_API_URL}/study/subjects?run=${run}`).then((res) => {
+      if (res.data.subjects) {
+        setEnrolledSubjects(res.data.subjects);
+        return
+      }
+    }
+    ).catch((err) => {
+      console.log(err);
+    }
+    );
+  }, []);
+
+  //Recuperacion de horarios alternativos
+  useEffect(() => {
+    if (selectedSubject) {
+      axiosInstance.get(`${import.meta.env.VITE_API_URL}/schedule/subjects?subject_code=${selectedSubject}&letter=${enrolledSubjects.find((enrolledSubject) => selectedSubject == enrolledSubject.code)?.letter}`).then((res) => {
+        if (res.data.schedule) {
+          console.log(res.data.schedule);
+
+          setAlternativeSchedules(res.data.schedule);
+          setSelectedSchedule(res.data.schedule[0]);
+          setSelectedPage(0);
+          return
+        }
+      }
+      ).catch((err) => {
+        console.log(err);
+      }
+      );
+    }
+  }, [selectedSubject]);
 
   const handleBlockClick = (subjectCode: string) => {
     if (!selectedSubject) {
@@ -112,7 +168,7 @@ export default function ScheduleTrade() {
   };
 
   useEffect(() => {
-    setSelectedSchedule(schedulesAlternatives[selectedPage]);
+    setSelectedSchedule(alternativeSchedules[selectedPage]);
   }, [selectedPage]);
 
   useEffect(() => {
@@ -136,6 +192,7 @@ export default function ScheduleTrade() {
               subjectOptions.find(({ value }) => value === selectedSubject) ??
               null
             }
+            isClearable={true}
             placeholder={'Selecciona una asignatura'}
             onChange={option =>
               navigate(`/trade-schedule/${option?.value ?? ''}`)
@@ -182,44 +239,47 @@ export default function ScheduleTrade() {
                 </ScheduleBlock>
               ))}
             </ScheduleColumn>
-            {scheduleExample.map(({ dayName, blocks }, dayIndex) => (
+            {!personalSchedule ? <div className='loading-icon__container'>
+              <FadeLoader />
+            </div> : personalSchedule.map(({ dayName, blocks }, dayIndex) => (
               <ScheduleColumn
                 key={dayIndex}
                 title={dayName}
               >
-                {blocks.map((block, blockIndex) => (
-                  <ScheduleBlock
-                    key={blockIndex}
-                    blockNumber={block.blockNumber}
-                    className={blockClasses(block.subject.code)}
-                    onClick={() => handleBlockClick(block.subject.code)}
-                  >
-                    {block.subject.code === selectedSubject &&
-                      selectedSubject && (
+                {blocks.map((block, blockIndex) => {
+                  if (blocks.length > blockIndex + 1 && blocks[blockIndex + 1].blockNumber === block.blockNumber) return null
+                  return (
+                    <ScheduleBlock
+                      key={blockIndex}
+                      blockNumber={block.blockNumber}
+                      className={blockClasses(block.subject.code)}
+                      onClick={() => handleBlockClick(block.subject.code)}
+                    >
+                      {block.subject.code === selectedSubject &&
+                        selectedSubject && (
+                          <>
+                            {Object.entries(block.subject).map(([key, value]) => (
+                              <ScheduleInfo
+                                key={crypto.randomUUID()}
+                                text={value}
+                                className={key} />
+                            ))}
+                          </>
+                        )}
+                      {!selectedSubject && (
                         <>
                           {Object.entries(block.subject).map(([key, value]) => (
                             <ScheduleInfo
                               key={crypto.randomUUID()}
                               text={value}
-                              className={key}
-                            />
+                              className={key} />
                           ))}
                         </>
                       )}
-                    {!selectedSubject && (
-                      <>
-                        {Object.entries(block.subject).map(([key, value]) => (
-                          <ScheduleInfo
-                            key={crypto.randomUUID()}
-                            text={value}
-                            className={key}
-                          />
-                        ))}
-                      </>
-                    )}
-                    {blockConflict(block, dayName)}
-                  </ScheduleBlock>
-                ))}
+                      {blockConflict(block, dayName)}
+                    </ScheduleBlock>
+                  );
+                })}
               </ScheduleColumn>
             ))}
           </ScheduleGrid>
@@ -235,7 +295,10 @@ export default function ScheduleTrade() {
               <div className="paginator__container">
                 <button
                   className="paginator__button"
-                  onClick={() => setSelectedPage(selectedPage - 1)}
+                  onClick={() => {
+                    if (selectedPage > 0)
+                      setSelectedPage(selectedPage - 1)
+                  }}
                   disabled={selectedPage === 0}
                 >
                   <AiOutlineLeftCircle className="hidden-hover" />
@@ -245,7 +308,7 @@ export default function ScheduleTrade() {
                 <button
                   className="paginator__button"
                   onClick={() => setSelectedPage(selectedPage + 1)}
-                  disabled={selectedPage === schedulesAlternatives.length - 1}
+                  disabled={selectedPage === alternativeSchedules.length - 1}
                 >
                   <AiOutlineRightCircle className="hidden-hover" />
                   <AiFillRightCircle className="visible-hover" />

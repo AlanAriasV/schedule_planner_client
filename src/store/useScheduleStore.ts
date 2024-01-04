@@ -5,8 +5,8 @@ interface ScheduleStore {
 }
 
 interface ScheduleActionsStore {
-  setSchedule: (schedule: ScheduleDay[]) => Promise<Boolean>;
-  resetSchedule: () => Promise<Boolean>;
+  setSchedule: (schedule: ScheduleDay[]) => Promise<boolean>;
+  resetSchedule: () => Promise<boolean>;
 }
 
 const initialState: ScheduleStore = {
